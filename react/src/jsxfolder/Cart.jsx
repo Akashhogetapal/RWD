@@ -8,7 +8,7 @@ function Cart() {
     const [profileOpen, setProfileOpen] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [pickupMins, setPickupMins] = useState(15);
 
     const [orderType, setOrderType] = useState("asap");
     const [scheduleDate, setScheduleDate] = useState("");
@@ -258,13 +258,24 @@ function Cart() {
                                 </>
                             ) : (
                                 <div className="cc-asap-view">
-                                    <div className="cc-quick-chips">
-                                        <span className="cc-chip">10 Mins</span>
-                                        <span className="cc-chip active">15 Mins</span>
-                                        <span className="cc-chip">20 Mins</span>
-                                    </div>
-                                    <div className="cc-info-msg">Ready for pickup in <span className="cc-highlight">15 minutes</span>.</div>
-                                </div>
+  <div className="cc-quick-chips">
+    {[10, 15, 20].map((min) => (
+      <span
+        key={min}
+        className={`cc-chip ${pickupMins === min ? "active" : ""}`}
+        onClick={() => setPickupMins(min)}
+        style={{ cursor: "pointer" }}
+      >
+        {min} Mins
+      </span>
+    ))}
+  </div>
+
+  <div className="cc-info-msg">
+    Ready for pickup in{" "}
+    <span className="cc-highlight">{pickupMins} minutes</span>.
+  </div>
+</div>
                             )}
                         </div>
                     </div>
