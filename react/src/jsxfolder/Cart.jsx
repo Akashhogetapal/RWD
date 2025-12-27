@@ -257,25 +257,25 @@ function Cart() {
                                     <div className="cc-info-msg">Order ready at <span className="cc-highlight">{scheduleTime || "--:--"}</span></div>
                                 </>
                             ) : (
-                                <div className="cc-asap-view">
-  <div className="cc-quick-chips">
-    {[10, 15, 20].map((min) => (
-      <span
-        key={min}
-        className={`cc-chip ${pickupMins === min ? "active" : ""}`}
-        onClick={() => setPickupMins(min)}
-        style={{ cursor: "pointer" }}
-      >
-        {min} Mins
-      </span>
-    ))}
-  </div>
+                    <div className="cc-asap-view">
+                        <div className="cc-quick-chips">
+                            {[10, 15, 20].map((min) => (
+                            <span
+                                 key={min}
+                                 className={`cc-chip ${pickupMins === min ? "active" : ""}`}
+                                 onClick={() => setPickupMins(min)}
+                                 style={{ cursor: "pointer" }}
+                             >
+                              {min} Mins
+                            </span>
+                          ))}
+                        </div>
 
-  <div className="cc-info-msg">
-    Ready for pickup in{" "}
-    <span className="cc-highlight">{pickupMins} minutes</span>.
-  </div>
-</div>
+                <div className="cc-info-msg">
+                    Ready for pickup in{" "}
+                    <span className="cc-highlight">{pickupMins} minutes</span>.
+                 </div>
+                 </div>
                             )}
                         </div>
                     </div>
