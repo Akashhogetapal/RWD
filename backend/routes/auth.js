@@ -6,6 +6,7 @@ const getCart = require('../controller/getCart');
 const { getwallet, updatewallet } = require('../controller/wallet');
 const {profile}=require("../controller/profile")
 const { createTopup, getTopups } = require('../controller/topup');
+const {saveplanner,getplanner} =require("../controller/planner");
 const router = require('express').Router();
 
 router.post('/login', login, login2);
@@ -30,4 +31,7 @@ router.get('/profile',profile);
 
 router.post('/topup', createTopup);      
 router.post('/topup-history', getTopups); 
+
+router.post('/saveplanner',saveplanner);
+router.get('/getplanner',getplanner)
 module.exports = router;
