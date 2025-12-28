@@ -2,32 +2,23 @@ const Topup = require("../models/topup");
 const User = require("../models/user");
 const Wallet = require("../models/wallet");
 
-/**
- * CREATE TOPUP
- * key → login verification key
- */
 const createTopup = async (req, res) => {
     const { key, amt, utr } = req.body;
 
     try {
-        // basic validation
         if (!key || !amt || !utr) {
             return res.status(400).json({
                 success: false,
                 message: "Missing required fields"
             });
         }
-
-        // verify key belongs to a valid user
-        const user = await User.findOne({ spl_key: key });
+        const user = await User.findOne({ key });
         if (!user) {
             return res.status(401).json({
                 success: false,
                 message: "Invalid key"
             });
         }
-
-        // prevent duplicate UTR
         const utrExists = await Topup.findOne({ utr });
         if (utrExists) {
             return res.status(409).json({
@@ -36,14 +27,12 @@ const createTopup = async (req, res) => {
             });
         }
 
-        // save topup
         await Topup.create({
-            key,
+            userkey:key,
             amt,
             utr
         });
 
-        // update wallet balance
         let wallet = await Wallet.findOne({ user: user.email });
 
         if (wallet) {
@@ -70,9 +59,6 @@ const createTopup = async (req, res) => {
     }
 };
 
-/**
- * GET TOPUP HISTORY (by key)
- */
 const getTopups = async (req, res) => {
     const { key } = req.body;
 
@@ -84,7 +70,7 @@ const getTopups = async (req, res) => {
             });
         }
 
-        const topups = await Topup.find({ key }).sort({ date: -1 });
+        const topups = await Topup.find({ userkey:key }).sort({ date: -1 });
 
         return res.status(200).json({
             success: true,

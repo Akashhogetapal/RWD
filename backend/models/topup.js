@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const topupSchema = new mongoose.Schema({
-    key: {
-        type: String,      // spl_key from User
+    userkey: {
+        type: String,   
         required: true
     },
     amt: {
