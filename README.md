@@ -47,7 +47,7 @@ A RESTful API built with **Node.js** and **Express**, connecting to a MongoDB da
 1.  **Selection**: Users browse kitchens (`/menu`) and add items to Cart (`/kitchen`).
 2.  **Cart Management**: Items are stored in the backend cart collection.
 3.  **Payment**: Wallet interactions verify balance and deduct amounts securely.
-4.  **Order Placement**: Backend moves items from `Cart` to `Orders` collection.
+4.  **Order Placement**: Backend moves items from `Cart` to `Orders` collection..
 
 ---
 
