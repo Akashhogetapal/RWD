@@ -11,6 +11,7 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
 | [**Order Management**](#order-management) | Place Order, View History |
 | [**Products & Search**](#products--search) | Filter and Search |
 | [**Wallet**](#wallet) | Balance and Transactions |
+| [**Topup Operations**](#topup-operations) | Topup Wallet, View History |
 
 ---
 
@@ -333,4 +334,52 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
 *   **Response (Success - 200):**
     ```json
     { "success": true, "balance": 600 }
+    ```
+
+---
+
+## Topup Operations
+
+### 18. Create Topup
+*   **Endpoint:** `/auth/topup`
+*   **Method:** `POST`
+*   **Description:** Top up wallet balance using a UTR (Transaction ID).
+*   **Request Body:**
+    ```json
+    {
+      "key": "USER_KEY",
+      "amt": 500,
+      "utr": "UTR123456789"
+    }
+    ```
+*   **Response (Success - 201):**
+    ```json
+    {
+      "success": true,
+      "message": "Topup successful"
+    }
+    ```
+*   **Response (Error - 400/401/409):** Missing fields, Invalid key, UTR already used.
+
+### 19. Get Topup History
+*   **Endpoint:** `/auth/topup-history`
+*   **Method:** `POST`
+*   **Request Body:**
+    ```json
+    { "key": "USER_KEY" }
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "data": [
+        {
+          "_id": "...",
+          "userkey": "...",
+          "amt": 500,
+          "utr": "UTR123456789",
+          "date": "..."
+        }
+      ]
+    }
     ```
