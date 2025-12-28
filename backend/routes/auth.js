@@ -5,6 +5,7 @@ const { add2cart, returncart, deleteItem, removeQuantity,clearcart,getorder} = r
 const getCart = require('../controller/getCart');
 const { getwallet, updatewallet } = require('../controller/wallet');
 const {profile}=require("../controller/profile")
+const { createTopup, getTopups } = require('../controller/topup');
 const router = require('express').Router();
 
 router.post('/login', login, login2);
@@ -26,4 +27,7 @@ router.post('/getwallet', getwallet);
 router.post('/updatewallet', updatewallet);
 router.post('/getorder',getorder);
 router.get('/profile',profile);
+
+router.post('/topup', createTopup);      
+router.post('/topup-history', getTopups); 
 module.exports = router;
