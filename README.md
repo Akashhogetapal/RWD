@@ -18,7 +18,7 @@ c:/RWD
 
 ### 1. 🖥️ Frontend (`/react`)
 Built with **React (Vite)**, focusing on responsive design and smooth user interaction.
-*   **Core Stack**: React 18, React Router DOM, Vanilla CSS (Scoped).
+*   **Core Stack**: React 18, React Router DOM, Vanilla CSS (Scoped)...
 *   **Key Directories**:
     *   `src/jsxfolder`: React Components (`Canteen.jsx`, `Cart.jsx`, `menu.jsx`, etc.)
     *   `src/css`: Scoped CSS modules to prevent styling conflicts.
