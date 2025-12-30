@@ -3,6 +3,8 @@
 
 .topup-page,
 .topup-page * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -13,8 +15,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  /* justify-content: center; */
+  /* padding: 20px; */
   overflow-x: hidden;
 }
 
@@ -70,6 +72,10 @@
   font-size: 22px;
   margin-bottom: 12px;
   font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3px;
 }
 
 .quick-add {
@@ -101,7 +107,7 @@
   display: flex;
   gap: 15px;
   font-family: 'Plaster', cursive;
-  margin-top: 3px;
+  margin-top: 15px;
   width: 100%;
 }
 
@@ -111,11 +117,21 @@
   background: #FFE0B2;
   color: #ff7043;
   border: none;
-  border-radius: 999px;
+  /* border-radius: 999px; */
   font-family: 'Plaster', cursive;
   font-size: 32px;
   font-weight: 400;
   cursor: pointer;
+}
+.a200{
+  border-radius: 7px 0px 7px 50px;
+}
+
+.a500{
+  border-radius:0px;
+}
+.a750{
+  border-radius: 0px 7px 50px 7px;
 }
 
 .amount-buttons button:hover {
@@ -179,6 +195,75 @@
   border-top: 6px solid #ff7043;
   border-right: 6px solid #ff7043;
   transform: rotate(45deg);
+}
+.last-sec{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.scanner{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.scanner img{
+  height:250px;
+  width:250px;
+  /* border: 3px solid #ff7043; */
+}
+
+
+.utr-wrapper {
+  width: 100%;
+  max-width: 520px;
+  /* margin: 30px auto; */
+  margin-bottom: 90px;
+  padding: 20px 24px 28px;
+  border-radius: 28px;
+  background: #ff7043;
+  box-shadow: 0 10px 25px rgba(245, 124, 58, 0.35);
+}
+
+.utr-title {
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #FFE0B2;
+  margin-bottom: 18px;
+}
+
+.utr-input {
+  width: 100%;
+  height: 56px;
+  border-radius: 18px;
+  border: none;
+  outline: none;
+  padding: 0 18px;
+  font-size: 18px;
+  letter-spacing: 6px;
+  text-align: center;
+  color: #FF7043;
+  background-color: #FFE0B2;
+  font-weight: bold;
+}
+.utr-wrapper input {
+  background-color: #FFE0B2;
+  color:#FF7043;
+}
+
+.utr-input::placeholder {
+  color: #FF7043;
+
+  /* background-color: #FFE0B2; */
+  /* height: 100%;
+  width: 100%; */
+  text-align: center;
+  letter-spacing: 6px;
 }
 
 @media (max-width: 950px) {

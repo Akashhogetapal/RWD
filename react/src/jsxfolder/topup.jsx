@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "../css/topup.css";
-
+import scanner from "../images/scanner.png";
 
 function Topup() {
-    
+  const [utr, setUtr] = useState("");
+
   const [amount, setAmount] = useState(0);
   const currentBalance = 1000;
 
@@ -17,7 +18,6 @@ function Topup() {
       return;
     }
     alert(`Proceeding to pay ₹${amount}`);
-    // 👉 later: Razorpay / Stripe / backend API
   };
 
   return (
@@ -34,9 +34,9 @@ function Topup() {
         <div className="quick-add">
           <p className="addw">Add To Wallet</p>
           <div className="amount-buttons">
-            <button onClick={() => quickAdd(200)}>200</button>
-            <button onClick={() => quickAdd(500)}>500</button>
-            <button onClick={() => quickAdd(750)}>750</button>
+            <button className="a200" onClick={() => quickAdd(200)}>200</button>
+            <button className="a500" onClick={() => quickAdd(500)}>500</button>
+            <button className="a750" onClick={() => quickAdd(750)}>750</button>
           </div>
         </div>
 
@@ -51,12 +51,31 @@ function Topup() {
         </div>
       </div>
 
-      <button class="pay-btn">
+      {/* <button class="pay-btn">
   <span class="pay-text">PAY</span>
   <span class="arrow-circle">
     <span class="arrow"></span>
   </span>
-</button>
+</button> */}
+        <div className="last-sec">
+             <div className="scanner">
+               <img src={scanner} alt="My scanner" />
+             </div>
+
+             <div className="utr-wrapper">
+      <p className="utr-title">ENTER UTR</p>
+
+      <input
+        type="text"
+        value={utr}
+        onChange={(e) => setUtr(e.target.value)}
+        maxLength={10}
+        placeholder="–––– –––– ––––"
+        className="utr-input"
+      />
+    </div>
+        </div>
+
 </div>
   );
 }
