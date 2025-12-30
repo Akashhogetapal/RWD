@@ -12,6 +12,7 @@ import Menu from "./Menu";
 import Cart from "./Cart";
 import Profile from "./profile";
 import Topup from "./topup";
+import Admin from "./admin";
 
 function App() {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -27,18 +28,13 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forget" element={<ForgetPassword />} />
         <Route path="/reset" element={<ResetPassword />} />
-        <Route
-          path="/menu"
-          element={<Menu onProfile={() => setProfileOpen(true)} />}
-        />
+        <Route path="/menu" element={<Menu onProfile={() => setProfileOpen(true)} />} />
         <Route path="/cart" element={<Cart />} />
-        <Route
-          path="/kitchen"
-          element={<Canteen onProfile={() => setProfileOpen(true)} />}
-        />
+        <Route path="/kitchen" element={<Canteen onProfile={() => setProfileOpen(true)} />} />
         <Route path="/pagetwo" element={<PageTwo />} />
         <Route path="/order" element={<Order />} />
         <Route path="/topup" element={<Topup />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
