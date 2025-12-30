@@ -1,7 +1,7 @@
 # Canteen Connect - Full Stack RWD Project
 
 ## 📖 Overview
-**Canteen Connect** is a complete full-stack web application designed to digitize campus dining. It features a robust **Node.js/Express backend** managing users, orders, and wallets, paired with a responsive **React frontend** for a seamless student experience.
+**Canteen Connect** is a complete full-stack web application designed to digitize campus dining. It features a robust **Node.js/Express backend** managing users, orders, and wallets, paired with a responsive **React frontend** for a seamless student experience....
 
 ---
 
@@ -18,7 +18,7 @@ c:/RWD
 
 ### 1. 🖥️ Frontend (`/react`)
 Built with **React (Vite)**, focusing on responsive design and smooth user interaction.
-*   **Core Stack**: React 18, React Router DOM, Vanilla CSS (Scoped).
+*   **Core Stack**: React 18, React Router DOM, Vanilla CSS (Scoped)...
 *   **Key Directories**:
     *   `src/jsxfolder`: React Components (`Canteen.jsx`, `Cart.jsx`, `menu.jsx`, etc.)
     *   `src/css`: Scoped CSS modules to prevent styling conflicts.
