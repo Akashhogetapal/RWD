@@ -4,7 +4,6 @@ import scanner from "../images/scanner.png";
 
 function Topup() {
   const [utr, setUtr] = useState("");
-
   const [amount, setAmount] = useState(0);
   const currentBalance = 1000;
 
@@ -61,7 +60,7 @@ function Topup() {
              <div className="scanner">
                <img src={scanner} alt="My scanner" />
              </div>
-
+          <div className="column-sec">
              <div className="utr-wrapper">
       <p className="utr-title">ENTER UTR</p>
 
@@ -74,9 +73,12 @@ function Topup() {
         className="utr-input"
       />
     </div>
-        </div>
-
-</div>
+    <div className="topup-submit-btn">
+      <button className="pay-btn" onClick={handlePay}>Submit </button>
+         </div>
+       </div>
+     </div>
+  </div>
   );
 }
 

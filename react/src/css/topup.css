@@ -160,7 +160,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.pay-btn {
+/* .pay-btn {
   width: 456px;
   height: 168px;
   background: #FF7043;
@@ -195,7 +195,7 @@
   border-top: 6px solid #ff7043;
   border-right: 6px solid #ff7043;
   transform: rotate(45deg);
-}
+} */
 .last-sec{
   display: flex;
   justify-content: center;
@@ -204,6 +204,13 @@
   gap: 20px;
 }
 
+.column-sec{
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
 .scanner{
   display: flex;
   justify-content: flex-start;
@@ -212,19 +219,20 @@
 }
 
 .scanner img{
-  height:250px;
+  height:275px;
   width:250px;
   /* border: 3px solid #ff7043; */
 }
 
 
 .utr-wrapper {
-  width: 100%;
-  max-width: 520px;
+  width: 450px;
+  height: 130px;
+  /* max-width: 520px; */
   /* margin: 30px auto; */
-  margin-bottom: 890px;
+  margin-bottom: 10px;
   padding: 20px 24px 28px;
-  border-radius: 28px;
+  border-radius: 8px 181px 8px 8px;
   background: #ff7043;
   box-shadow: 0 10px 25px rgba(245, 124, 58, 0.35);
 }
@@ -234,7 +242,7 @@
   font-weight: 800;
   letter-spacing: 2px;
   color: #FFE0B2;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
 .utr-input {
@@ -254,6 +262,11 @@
 .utr-wrapper input {
   background-color: #FFE0B2;
   color:#FF7043;
+  border-radius: 8px 181px 8px 8px;
+  height: 70px;
+  width: 415px;
+  margin-left: 0px;
+  /* margin-bottom: 30px; */
 }
 
 .utr-input::placeholder {
@@ -264,6 +277,35 @@
   width: 100%; */
   text-align: center;
   letter-spacing: 6px;
+}
+
+.topup-submit-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.pay-btn {
+  width: 450px;
+  height: 130px;
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #FF7043;
+  background:#FFE0B2;
+  border: 9px solid #FF7043;
+  border-radius: 8px 8px 181px 8px;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(245, 124, 58, 0.35);
+  transition: all 0.25s ease;
+}
+.pay-btn:hover {
+  background: linear-gradient(135deg, #ffe2bf, #ffd2a3);
+  transform: translateY(-3px);
+}
+.pay-btn:active {
+  transform: scale(0.96);
 }
 
 @media (max-width: 950px) {
