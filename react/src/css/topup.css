@@ -373,4 +373,17 @@
     height: 50px;
     font-size: 24px;
   }
+  .last-sec{
+    flex-direction: column;
+  }
+  .pay-btn, .utr-wrapper{
+    width: 100%;
+    width: 370px;
+    border-radius:50px;
+  }
+  .utr-wrapper input {
+    width: 100%;
+    max-width: 350px;
+    border-radius:50px;
+  }
     }
