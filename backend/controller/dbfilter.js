@@ -5,10 +5,18 @@ const filter = async (req, res) => {
         const { category } = req.body;
 
         let items;
+        let count;
         if (category === "All") {
-            items = await Item.find();
+            count= await Item.countDocuments()
+            items = await Item.aggregate([
+                {$sample:{size:count}}
+            ]);
         } else {
-            items = await Item.find({ category });
+            count =await Item.countDocuments({category});
+            items = await Item.aggregate([
+                {$match:{category}},
+                {$sample:{size : count}}
+            ]);
         }
 
         return res.status(200).json({
