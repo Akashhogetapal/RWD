@@ -1,10 +1,12 @@
 import { useState } from "react";
 import "../css/topup.css";
 import scanner from "../images/scanner.png";
+import AuthPopup from "./AuthPopup";
 
 function Topup() {
   const [utr, setUtr] = useState("");
   const [amount, setAmount] = useState(0);
+  const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
   const currentBalance = 1000;
 
   const quickAdd = (value) => {
@@ -13,14 +15,19 @@ function Topup() {
 
   const handlePay = () => {
     if (amount <= 0) {
-      alert("Enter a valid amount");
+      setPopup({ title: "Invalid Amount", message: "Enter a valid amount.", icon: "⚠️" });
       return;
     }
-    alert(`Proceeding to pay ₹${amount}`);
+    setPopup({
+      title: "Processing",
+      message: `Proceeding to pay ₹${amount}`,
+      icon: "💸",
+      btnText: "Confirm"
+    });
   };
 
   return (
-    
+
     <div className="topup-page">
       <h1 className="topup-title">Top-Up</h1>
 
@@ -50,35 +57,43 @@ function Topup() {
         </div>
       </div>
 
-      {/* <button class="pay-btn">
-  <span class="pay-text">PAY</span>
-  <span class="arrow-circle">
-    <span class="arrow"></span>
-  </span>
-</button> */}
-        <div className="last-sec">
-             <div className="scanner">
-               <img src={scanner} alt="My scanner" />
-             </div>
-          <div className="column-sec">
-             <div className="utr-wrapper">
-      <p className="utr-title">ENTER UTR</p>
+      <div className="last-sec">
+        <div className="scanner">
+          <img src={scanner} alt="My scanner" />
+        </div>
+        <div className="column-sec">
+          <div className="utr-wrapper">
+            <p className="utr-title">ENTER UTR</p>
 
-      <input
-        type="text"
-        value={utr}
-        onChange={(e) => setUtr(e.target.value)}
-        maxLength={10}
-        placeholder="–––– –––– ––––"
-        className="utr-input"
-      />
+            <input
+              type="text"
+              value={utr}
+              onChange={(e) => setUtr(e.target.value)}
+              maxLength={10}
+              placeholder="–––– –––– ––––"
+              className="utr-input"
+            />
+          </div>
+          <div className="topup-submit-btn">
+            <button className="pay-btn" onClick={handlePay}>Submit </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Popup */}
+      {popup && (
+        <AuthPopup
+          title={popup.title}
+          message={popup.message}
+          icon={popup.icon}
+          btnText={popup.btnText || "OK"}
+          onConfirm={() => {
+            if (popup.onConfirm) popup.onConfirm();
+            setPopup(null);
+          }}
+        />
+      )}
     </div>
-    <div className="topup-submit-btn">
-      <button className="pay-btn" onClick={handlePay}>Submit </button>
-         </div>
-       </div>
-     </div>
-  </div>
   );
 }
 

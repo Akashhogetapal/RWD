@@ -19,51 +19,67 @@ async function randomkey(){
 }
 
 
-const signup2=async(req,res)=>{
-    try{
-        const{name,phone,usn,gender,email,password}=req.body;
-        const alremail=await User.findOne({email});
-        if(alremail){
-            return res.status(409).json({
-                message:"Email already exists",
-                type:"email",
-                success:false
-            })
-        }
-        const alrusn=await User.findOne({usn});
-        if(alrusn){
-            return res.status(409).json({
-                message:"USN already exists",
-                type:"usn",
-                success:false
-            })
-        }
-        const hpass=await bcrypt.hash(password,10);
-        const key1=await randomkey();
-        const newuser=new User({
-            name,
-            phone,
-            usn,
-            gender,
-            email,
-            password:hpass,
-            key:key1,
-        });
-        await newuser.save();
-        res.status(201).json({
-            message:"Singup successful",
-            success:true
-        });
-        await welcome(name,phone,usn,gender,email,key1)
+const signup2 = async (req, res) => {
+  try {
+    const { name, phone, usn, gender, email, password } = req.body;
+
+    if (!name || !phone || !usn || !gender || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        type: "missing",
+        message: "All fields are required"
+      });
     }
-    catch(err){
-        console.error(err);
-        res.status(500).json({
-            message:"Signup failed",
-            success:false
-        });
+
+    const alremail = await User.findOne({ email });
+    if (alremail) {
+      return res.status(409).json({
+        success: false,
+        type: "email",
+        message: "Email already exists"
+      });
     }
+
+    const alrusn = await User.findOne({ usn });
+    if (alrusn) {
+      return res.status(409).json({
+        success: false,
+        type: "usn",
+        message: "USN already exists"
+      });
+    }
+
+    const hpass = await bcrypt.hash(password, 10);
+    const key1 = await randomkey();
+
+    const newuser = new User({
+      name,
+      phone,
+      usn,
+      gender,
+      email,
+      password: hpass,
+      key: key1
+    });
+
+    await newuser.save();
+    await welcome(name, phone, usn, gender, email, key1);
+
+    return res.status(201).json({
+      success: true,
+      message: "Signup successful"
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      type: "server",
+      message: "Internal server error"
+    });
+  }
 };
+
 
 const login2 = async (req, res) => {
     try {

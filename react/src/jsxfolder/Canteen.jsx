@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import "../css/canteen.css";
 import Profile from "./profile";
+import AuthPopup from "./AuthPopup";
 
 function Canteen() {
-   const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
+  const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
 
   const kitchenParam = searchParams.get("kitchen") || searchParams.get("name");
   const gmailParam = searchParams.get("gmail") || searchParams.get("user");
@@ -84,8 +86,13 @@ function Canteen() {
     try {
       let userGmail = localStorage.getItem("gmail") || gmailParam;
       if (!userGmail) {
-        alert("Invalid User. Please Login first!");
-        navigate("/login");
+        setPopup({
+          title: "Login Required",
+          message: "Invalid User. Please Login first!",
+          icon: "🔒",
+          btnText: "Log In",
+          onConfirm: () => navigate("/login")
+        });
         return;
       }
 
@@ -102,10 +109,20 @@ function Canteen() {
 
       const data = await res.json();
       if (!data.success) {
-        alert(data.message || "Failed to add item");
+        setPopup({
+          title: "Error",
+          message: data.message || "Failed to add item to cart.",
+          icon: "❌",
+          btnText: "Retry"
+        });
         return;
       }
-      alert("Added to cart: " + item.name);
+      setPopup({
+        title: "Added to Cart 🛒",
+        message: `${item.name} added successfully!`,
+        icon: "✅",
+        btnText: "Okay"
+      });
     } catch (err) {
       console.error(err);
     }
@@ -154,9 +171,9 @@ function Canteen() {
               <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" />
             </svg>
           </div>
-            <Profile  open={open}
-                         onClose={() =>setOpen(false)}
-                         />
+          <Profile open={open}
+            onClose={() => setOpen(false)}
+          />
         </div>
       </div>
 
@@ -206,6 +223,20 @@ function Canteen() {
             <div className="para" style={{ gridColumn: '1 / -1', color: '#666' }}>No items found for {displayName}.</div>
           )}
         </div>
+      )}
+
+      {/* Popup */}
+      {popup && (
+        <AuthPopup
+          title={popup.title}
+          message={popup.message}
+          icon={popup.icon}
+          btnText={popup.btnText || "OK"}
+          onConfirm={() => {
+            if (popup.onConfirm) popup.onConfirm();
+            setPopup(null);
+          }}
+        />
       )}
     </div>
   );

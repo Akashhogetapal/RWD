@@ -2,11 +2,13 @@ import "../css/menu.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import Profile from "./profile";
+import AuthPopup from "./AuthPopup";
 
 function Menu({ onProfile }) {
     const [profileOpen, setProfileOpen] = useState(false);
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
+    const [popup, setPopup] = useState(null);
     const [activeFilter, setActiveFilter] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
     const userEmail = localStorage.getItem("gmail");
@@ -61,26 +63,36 @@ function Menu({ onProfile }) {
         }
     };
 
-    
+
     const handleKitchenClick = (kitchenName) => {
         if (!userEmail) {
-            alert("Please login to view kitchen details.");
-            navigate("/login");
+            setPopup({
+                title: "Login Required",
+                message: "Please login to view kitchen details.",
+                icon: "🔒",
+                btnText: "Log In",
+                onConfirm: () => navigate("/login")
+            });
             return;
         }
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
         navigate(`/kitchen?name=${encodeURIComponent(kitchenName)}&user=${encodeURIComponent(userEmail)}`);
     };
 
     const addToCart = async (item) => {
         if (!userEmail) {
-            alert("Invalid User. Please Login first!");
-            navigate("/login");
+            setPopup({
+                title: "Login Required",
+                message: "Invalid User. Please Login first!",
+                icon: "🔒",
+                btnText: "Log In",
+                onConfirm: () => navigate("/login")
+            });
             return;
         }
 
@@ -97,9 +109,19 @@ function Menu({ onProfile }) {
             });
             const data = await res.json();
             if (res.ok && data.success) {
-                alert("Item added to cart!");
+                setPopup({
+                    title: "Added to Cart 🛒",
+                    message: `${item.name} added successfully!`,
+                    icon: "✅",
+                    btnText: "Okay"
+                });
             } else {
-                alert("Failed to add item");
+                setPopup({
+                    title: "Error",
+                    message: "Failed to add item to cart.",
+                    icon: "❌",
+                    btnText: "Retry"
+                });
             }
         } catch (err) {
             console.error(err);
@@ -108,7 +130,7 @@ function Menu({ onProfile }) {
 
     return (
         <div className="menu-page-wrapper">
-            
+
             { }
             <div className="header">
                 <div className="logo" onClick={() => navigate("/")}>
@@ -146,7 +168,7 @@ function Menu({ onProfile }) {
                 </div>
             </div>
 
-                        {/* <Profile
+            {/* <Profile
                        open={profileOpen}
                          onClose={() => setProfileOpen(false)}
                          /> */}
@@ -171,7 +193,7 @@ function Menu({ onProfile }) {
                 <div className="kcard" onClick={() => handleKitchenClick("Central Mess")}>
                     <div className="cicon">
                         <svg fill="#FF7043" width="35" height="35" viewBox="0 0 24 24">
-                            <path d="M14,1a1,1,0,0,0-1,1V7a4,4,0,0,0,3,3.858v2.354A2.5,2.5,0,0,0,14.5,15.5v5a2.5,2.5,0,0,0,5,0v-5A2.5,2.5,0,0,0,18,13.212V10.858A4,4,0,0,0,21,7V2a1,1,0,0,0-2,0V6H18V2a1,1,0,0,0-2,0V6H15V2A1,1,0,0,0,14,1Zm3.5,19.5a.5.5,0,0,1-1,0v-5a.5.5,0,0,1,1,0ZM18.731,8a2,2,0,0,1-3.462,0ZM11,6c0-2.757-1.794-5-4-5S3,3.243,3,6a4.92,4.92,0,0,0,3,4.822v2.39A2.5,2.5,0,0,0,4.5,15.5v5a2.5,2.5,0,0,0,5,0v-5A2.5,2.5,0,0,0,8,13.212v-2.39A4.92,4.92,0,0,0,11,6ZM5,6c0-1.626.916-3,2-3S9,4.374,9,6,8.084,9,7,9,5,7.626,5,6ZM7.5,20.5a.5.5,0,0,1-1,0v-5a.5.5,0,0,1,1,0Z"/>
+                            <path d="M14,1a1,1,0,0,0-1,1V7a4,4,0,0,0,3,3.858v2.354A2.5,2.5,0,0,0,14.5,15.5v5a2.5,2.5,0,0,0,5,0v-5A2.5,2.5,0,0,0,18,13.212V10.858A4,4,0,0,0,21,7V2a1,1,0,0,0-2,0V6H18V2a1,1,0,0,0-2,0V6H15V2A1,1,0,0,0,14,1Zm3.5,19.5a.5.5,0,0,1-1,0v-5a.5.5,0,0,1,1,0ZM18.731,8a2,2,0,0,1-3.462,0ZM11,6c0-2.757-1.794-5-4-5S3,3.243,3,6a4.92,4.92,0,0,0,3,4.822v2.39A2.5,2.5,0,0,0,4.5,15.5v5a2.5,2.5,0,0,0,5,0v-5A2.5,2.5,0,0,0,8,13.212v-2.39A4.92,4.92,0,0,0,11,6ZM5,6c0-1.626.916-3,2-3S9,4.374,9,6,8.084,9,7,9,5,7.626,5,6ZM7.5,20.5a.5.5,0,0,1-1,0v-5a.5.5,0,0,1,1,0Z" />
                         </svg>
                     </div>
                     <div className="cinfo">
@@ -233,8 +255,8 @@ function Menu({ onProfile }) {
                                     <h5>₹{item.price}</h5>
                                 </div>
                                 <div className="bcart">
-                                    <button 
-                                        className="add-btn" 
+                                    <button
+                                        className="add-btn"
                                         onClick={() => addToCart(item)}
                                     >
                                         Add +
@@ -245,6 +267,19 @@ function Menu({ onProfile }) {
                     </div>
                 ))}
             </div>
+            {/* Popup */}
+            {popup && (
+                <AuthPopup
+                    title={popup.title}
+                    message={popup.message}
+                    icon={popup.icon}
+                    btnText={popup.btnText || "OK"}
+                    onConfirm={() => {
+                        if (popup.onConfirm) popup.onConfirm();
+                        setPopup(null);
+                    }}
+                />
+            )}
         </div>
     );
 }

@@ -27,6 +27,13 @@
   font-weight: 700;
   cursor: pointer;
 }
+.profile-loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #FF7043;
+}
 
 
 .profile-popup-card {
@@ -39,14 +46,14 @@
   padding: 18px;
   border-radius: 36px;
   background: linear-gradient(180deg, #FFF6E8, #ff6f43cc);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
   z-index: 100000;
 }
 
 
 .profile-header-card {
   height: 73px;
-  width:auto;
+  width: auto;
   display: flex;
   gap: 25px;
   align-items: center;
@@ -58,9 +65,9 @@
 }
 
 .profile-popup-card h2 {
-    font-size:37px;
-    font-weight:bolder;
-    color: #FFF6E8;
+  font-size: 37px;
+  font-weight: bolder;
+  color: #FFF6E8;
 }
 
 .profile-avatar {
@@ -93,7 +100,7 @@
 
 .balance-amount {
   font-size: 36px;
-  font-weight:bold;
+  font-weight: bold;
   color: #f47c4f;
   margin-top: 10px;
   line-height: 51px;
@@ -108,16 +115,17 @@
   background: #FF7043;
   color: #FFF6E8;
   border: none;
-  
+
   border-radius: 53px;
   font-size: 23px;
   font-weight: 700;
   cursor: pointer;
 }
-.topup-btn:hover{
-    border: 1px solid #FFF6E8; 
-    background-color: #ff6f43cc;
-    color: white;
+
+.topup-btn:hover {
+  border: 1px solid #FFF6E8;
+  background-color: #ff6f43cc;
+  color: white;
 }
 
 
@@ -162,7 +170,8 @@
   margin-top: 16px;
   width: 100%;
   background: #FF7043;
-  color: #fff7f2;;
+  color: #fff7f2;
+  ;
   border: none;
   padding: 16px;
   border-radius: 32px;
@@ -171,10 +180,10 @@
   cursor: pointer;
 }
 
-.logout-btn:hover{
-    border: 1px solid #FFF6E8; 
-    background-color: #ff6f43a8;
-    color: white;
+.logout-btn:hover {
+  border: 1px solid #FFF6E8;
+  background-color: #ff6f43a8;
+  color: white;
 }
 
 .profile-backdrop {
@@ -212,4 +221,68 @@
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
+}
+
+/* Animations */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.85);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.85);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.slide-in {
+  /* Premium spring-ish pop effect */
+  animation: slideIn 0.4s cubic-bezier(0.3, 1.2, 0.4, 1) forwards;
+  transform-origin: top right;
+}
+
+.slide-out {
+  animation: slideOut 0.3s ease-in forwards;
+  transform-origin: top right;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
 }

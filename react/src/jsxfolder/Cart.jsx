@@ -2,6 +2,7 @@ import "../css/cart.css";
 import { useState, useEffect } from "react";
 import Profile from "./profile";
 import { useNavigate } from "react-router-dom";
+import AuthPopup from "./AuthPopup";
 
 function Cart() {
     const navigate = useNavigate();
@@ -9,6 +10,7 @@ function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pickupMins, setPickupMins] = useState(15);
+    const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
 
     const [orderType, setOrderType] = useState("asap");
     const [scheduleDate, setScheduleDate] = useState("");
@@ -27,8 +29,13 @@ function Cart() {
 
     useEffect(() => {
         if (!userEmail) {
-            alert("Please log in to view your cart.");
-            navigate("/login");
+            setPopup({
+                title: "Login Required",
+                message: "Please log in to view your cart.",
+                icon: "🔒",
+                btnText: "Log In",
+                onConfirm: () => navigate("/login")
+            });
             return;
         }
         fetchCart();
@@ -80,7 +87,10 @@ function Cart() {
 
 
     const handlePay = async () => {
-        if (!userKey) return alert("Missing user key. Please log in again.");
+        if (!userKey) {
+            setPopup({ title: "Error", message: "Missing user key. Please log in again.", icon: "❌" });
+            return;
+        }
 
         const btn = document.querySelector('.cc-pay-confirm-btn');
         const originalText = btn.innerHTML;
@@ -98,7 +108,13 @@ function Cart() {
 
             if (res.status === 400) throw new Error("Invalid Session");
             if (data.balance < grandTotal) {
-                alert("Insufficient wallet balance!");
+                setPopup({
+                    title: "Insufficient Balance",
+                    message: "Your wallet balance is too low for this order.",
+                    icon: "💳",
+                    btnText: "Top Up",
+                    onConfirm: () => navigate("/topup")
+                });
                 btn.innerHTML = originalText;
                 btn.disabled = false;
                 return;
@@ -115,18 +131,22 @@ function Cart() {
 
                 const orderPlaced = await placeOrder();
                 if (orderPlaced) {
-                    alert("Payment successful! Order placed.");
-
-                    navigate(`/order?email=${encodeURIComponent(userEmail)}`);
+                    setPopup({
+                        title: "Order Placed! 🎉",
+                        message: "Payment successful. Your food is being prepared.",
+                        icon: "✅",
+                        btnText: "Track Order",
+                        onConfirm: () => navigate(`/order?email=${encodeURIComponent(userEmail)}`)
+                    });
                 } else {
-                    alert("Money deducted but order failed. Contact support.");
+                    setPopup({ title: "Order Failed", message: "Money deducted but order failed. Contact support.", icon: "⚠️" });
                 }
             } else {
-                alert("Payment failed.");
+                setPopup({ title: "Payment Failed", message: "Transaction could not be completed.", icon: "❌" });
             }
         } catch (err) {
             console.error(err);
-            alert("Server error.");
+            setPopup({ title: "Server Error", message: "Something went wrong.", icon: "❌" });
         } finally {
             if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
         }
@@ -185,9 +205,9 @@ function Cart() {
                 </div>
                 <div className="cc-profile-badge" onClick={() => setProfileOpen(true)} style={{ cursor: 'pointer' }}>
                     <svg width="24" height="24" viewBox="0 0 16 16" fill="white">
-                            <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" />
-                            <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" />
-                        </svg>
+                        <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" />
+                        <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" />
+                    </svg>
                 </div>
                 <Profile open={profileOpen} onClose={() => setProfileOpen(false)} />
             </div>
@@ -257,25 +277,25 @@ function Cart() {
                                     <div className="cc-info-msg">Order ready at <span className="cc-highlight">{scheduleTime || "--:--"}</span></div>
                                 </>
                             ) : (
-                    <div className="cc-asap-view">
-                        <div className="cc-quick-chips">
-                            {[10, 15, 20].map((min) => (
-                            <span
-                                 key={min}
-                                 className={`cc-chip ${pickupMins === min ? "active" : ""}`}
-                                 onClick={() => setPickupMins(min)}
-                                 style={{ cursor: "pointer" }}
-                             >
-                              {min} Mins
-                            </span>
-                          ))}
-                        </div>
+                                <div className="cc-asap-view">
+                                    <div className="cc-quick-chips">
+                                        {[10, 15, 20].map((min) => (
+                                            <span
+                                                key={min}
+                                                className={`cc-chip ${pickupMins === min ? "active" : ""}`}
+                                                onClick={() => setPickupMins(min)}
+                                                style={{ cursor: "pointer" }}
+                                            >
+                                                {min} Mins
+                                            </span>
+                                        ))}
+                                    </div>
 
-                <div className="cc-info-msg">
-                    Ready for pickup in{" "}
-                    <span className="cc-highlight">{pickupMins} minutes</span>.
-                 </div>
-                 </div>
+                                    <div className="cc-info-msg">
+                                        Ready for pickup in{" "}
+                                        <span className="cc-highlight">{pickupMins} minutes</span>.
+                                    </div>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -301,6 +321,20 @@ function Cart() {
                     </div>
                 </div>
             </div>
+
+            {/* Popup */}
+            {popup && (
+                <AuthPopup
+                    title={popup.title}
+                    message={popup.message}
+                    icon={popup.icon}
+                    btnText={popup.btnText || "OK"}
+                    onConfirm={() => {
+                        if (popup.onConfirm) popup.onConfirm();
+                        setPopup(null);
+                    }}
+                />
+            )}
         </div >
     );
 }

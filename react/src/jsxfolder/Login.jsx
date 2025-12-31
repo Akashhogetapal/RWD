@@ -1,23 +1,25 @@
 import "../css/login.css";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthPopup from "./AuthPopup";
 
 function Login() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("login");
+    const [popup, setPopup] = useState(null);
     const [showPass, setShowPass] = useState(false);
-    
-    
+
+
     const [showSignupPass, setShowSignupPass] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
 
-    
+
     const [loginData, setLoginData] = useState({ email: "", password: "" });
-    const [signupData, setSignupData] = useState({ 
-        fullname: "", phone: "", email: "", roll: "", gender: "", campus: "", password: "", confirmpass: "" 
+    const [signupData, setSignupData] = useState({
+        fullname: "", phone: "", email: "", roll: "", gender: "", campus: "", password: "", confirmpass: ""
     });
 
-    
+
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
     const sNameRef = useRef(null);
@@ -29,24 +31,24 @@ function Login() {
     const sPassRef = useRef(null);
     const sConfirmRef = useRef(null);
 
-    
+
     const triggerErrorAnimation = (ref, placeholderMsg) => {
         if (ref.current) {
             ref.current.classList.remove("error");
-            void ref.current.offsetWidth; 
+            void ref.current.offsetWidth;
             ref.current.classList.add("error");
             if (placeholderMsg) ref.current.placeholder = placeholderMsg;
             ref.current.focus();
         }
     };
 
-    
+
     const handleLogin = async () => {
         const email = loginData.email.trim();
         const password = loginData.password.trim();
 
-        if(!email) { triggerErrorAnimation(emailRef, "Email Required"); return; }
-        if(!password) { triggerErrorAnimation(passwordRef, "Password Required"); return; }
+        if (!email) { triggerErrorAnimation(emailRef, "Email Required"); return; }
+        if (!password) { triggerErrorAnimation(passwordRef, "Password Required"); return; }
 
         try {
             const res = await fetch("https://rwd.up.railway.app/auth/login", {
@@ -55,13 +57,19 @@ function Login() {
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
-            
+
             if (res.status === 200 && data.success) {
                 console.log("Login Success:", data);
                 localStorage.setItem("token", data.jwtToke);
                 localStorage.setItem("gmail", email);
                 localStorage.setItem("key", data.key);
-                navigate("/menu");
+                setPopup({
+                    title: "Welcome Back! 👋",
+                    message: "Login successful.",
+                    icon: "✅",
+                    btnText: "Continue",
+                    onConfirm: () => navigate("/menu")
+                });
             } else if (res.status === 409) {
                 if (data.type === "email") {
                     setLoginData(prev => ({ ...prev, email: "" }));
@@ -76,16 +84,21 @@ function Login() {
             }
         } catch (err) {
             console.error(err);
-            alert("Server error. Try again later.");
+            setPopup({
+                title: "Error",
+                message: "Server error. Please try again later.",
+                icon: "❌",
+                btnText: "Dismiss"
+            });
         }
     };
 
-    
+
     const handleSignup = async () => {
         let hasError = false;
         const { fullname, phone, email, roll, gender, campus, password, confirmpass } = signupData;
 
-        
+
         if (!fullname.trim()) { triggerErrorAnimation(sNameRef, "Name required"); hasError = true; }
         if (!phone.trim()) { triggerErrorAnimation(sPhoneRef, "Phone required"); hasError = true; }
         if (!email.trim()) { triggerErrorAnimation(sEmailRef, "Email required"); hasError = true; }
@@ -97,7 +110,7 @@ function Login() {
 
         if (hasError) return;
 
-        
+
         const nameregex = /^[A-Za-z ]+$/;
         if (!nameregex.test(fullname.trim())) {
             setSignupData(p => ({ ...p, fullname: "" }));
@@ -137,7 +150,7 @@ function Login() {
             return;
         }
 
-        
+
         const bodydata = {
             name: fullname.trim(),
             phone: phone.trim(),
@@ -155,33 +168,67 @@ function Login() {
                 body: JSON.stringify(bodydata)
             });
 
-            if (res.status === 201) {
-                alert("Account Created Successfully!");
-                setActiveTab("login");
+            const data = await res.json();
+
+            if (res.status === 201 && data.success) {
+                setPopup({
+                    title: "Success",
+                    message: "Account Created Successfully! Please Log In.",
+                    icon: "🎉",
+                    btnText: "Go to Login",
+                    onConfirm: () => setActiveTab("login")
+                });
             } else {
-                alert("Server rejected signup. Check details.");
+                if (data.type === "email") {
+                    setSignupData(p => ({ ...p, email: "" }));
+                    triggerErrorAnimation(sEmailRef, "Email already exists");
+                } else if (data.type === "usn") {
+                    setSignupData(p => ({ ...p, roll: "" }));
+                    triggerErrorAnimation(sRollRef, "USN already exists");
+                } else if (data.type === "missing") {
+                    setPopup({
+                        title: "Missing Fields",
+                        message: "Please fill all required fields",
+                        icon: "⚠️",
+                        btnText: "Fix"
+                    });
+                } else {
+                    setPopup({
+                        title: "Signup Failed",
+                        message: data.message || "Server error",
+                        icon: "❌",
+                        btnText: "Retry"
+                    });
+                }
             }
         } catch (err) {
             console.error(err);
-            alert("Server Error");
+            setPopup({
+                title: "Error",
+                message: "Server Error. Please try again later.",
+                icon: "❌",
+                btnText: "Dismiss"
+            });
         }
     };
 
+
+
     return (
         <div className="login-page-wrapper">
-            
+
             { }
             <div className="login-left">
-                
+
                 { }
                 <div className="toggle-container">
-                    <button 
+                    <button
                         className={`toggle-btn ${activeTab === 'login' ? 'active' : ''}`}
                         onClick={() => setActiveTab('login')}
                     >
                         Log In
                     </button>
-                    <button 
+                    <button
                         className={`toggle-btn ${activeTab === 'signup' ? 'active' : ''}`}
                         onClick={() => setActiveTab('signup')}
                     >
@@ -194,33 +241,33 @@ function Login() {
                     {activeTab === 'login' && (
                         <>
                             <h2 className="form-title">Welcome back!</h2>
-                            
+
                             <div className="input-box">
                                 <label className="input-label">College Email ID</label>
-                                <input 
+                                <input
                                     ref={emailRef}
                                     className="custom-input"
-                                    type="email" 
-                                    placeholder="your.email@college.edu" 
+                                    type="email"
+                                    placeholder="your.email@college.edu"
                                     value={loginData.email}
-                                    onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                                 />
                             </div>
 
                             <div className="input-box">
                                 <label className="input-label">Password</label>
-                                <div style={{position:'relative'}}>
-                                    <input 
+                                <div style={{ position: 'relative' }}>
+                                    <input
                                         ref={passwordRef}
                                         className="custom-input"
-                                        type={showPass ? "text" : "password"} 
-                                        placeholder="Enter your password" 
+                                        type={showPass ? "text" : "password"}
+                                        placeholder="Enter your password"
                                         value={loginData.password}
-                                        onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                                        onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                                     />
-                                    <span 
+                                    <span
                                         onClick={() => setShowPass(!showPass)}
-                                        style={{position:'absolute', right:'15px', top:'15px', cursor:'pointer', color:'#888', fontSize:'20px'}}
+                                        style={{ position: 'absolute', right: '15px', top: '15px', cursor: 'pointer', color: '#888', fontSize: '20px' }}
                                     >
                                         {showPass ? "🙈" : "👁️"}
                                     </span>
@@ -229,13 +276,13 @@ function Login() {
 
                             <div className="forgot-text">
                                 { }
-                                <span onClick={() => navigate("/forget")} style={{cursor: "pointer"}}>
+                                <span onClick={() => navigate("/forget")} style={{ cursor: "pointer" }}>
                                     Forgot Password?
                                 </span>
                             </div>
 
                             <button className="submit-btn" onClick={handleLogin}>Log In</button>
-                            
+
                             <p className="switch-bottom">
                                 Don't have an account? <span onClick={() => setActiveTab('signup')}>Sign Up</span>
                             </p>
@@ -246,22 +293,22 @@ function Login() {
                     {activeTab === 'signup' && (
                         <>
                             <h2 className="form-title">Create student profile</h2>
-                            
+
                             <div className="grid-row">
                                 <div className="input-box">
                                     <label className="input-label">Full Name</label>
-                                    <input 
+                                    <input
                                         ref={sNameRef}
-                                        className="custom-input" type="text" placeholder="John Doe" 
-                                        value={signupData.fullname} onChange={(e)=>setSignupData({...signupData, fullname:e.target.value})} 
+                                        className="custom-input" type="text" placeholder="John Doe"
+                                        value={signupData.fullname} onChange={(e) => setSignupData({ ...signupData, fullname: e.target.value })}
                                     />
                                 </div>
                                 <div className="input-box">
                                     <label className="input-label">Phone Number</label>
-                                    <input 
+                                    <input
                                         ref={sPhoneRef}
-                                        className="custom-input" type="tel" placeholder="0123456789" 
-                                        value={signupData.phone} onChange={(e)=>setSignupData({...signupData, phone:e.target.value})} 
+                                        className="custom-input" type="tel" placeholder="0123456789"
+                                        value={signupData.phone} onChange={(e) => setSignupData({ ...signupData, phone: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -269,18 +316,18 @@ function Login() {
                             <div className="grid-row">
                                 <div className="input-box">
                                     <label className="input-label">College Email ID</label>
-                                    <input 
+                                    <input
                                         ref={sEmailRef}
-                                        className="custom-input" type="email" placeholder="email@college.edu" 
-                                        value={signupData.email} onChange={(e)=>setSignupData({...signupData, email:e.target.value})} 
+                                        className="custom-input" type="email" placeholder="email@college.edu"
+                                        value={signupData.email} onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
                                     />
                                 </div>
                                 <div className="input-box">
                                     <label className="input-label">Student Roll No</label>
-                                    <input 
+                                    <input
                                         ref={sRollRef}
-                                        className="custom-input" type="text" placeholder="STU123" 
-                                        value={signupData.roll} onChange={(e)=>setSignupData({...signupData, roll:e.target.value})} 
+                                        className="custom-input" type="text" placeholder="STU123"
+                                        value={signupData.roll} onChange={(e) => setSignupData({ ...signupData, roll: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -288,9 +335,9 @@ function Login() {
                             <div className="grid-row">
                                 <div className="input-box">
                                     <label className="input-label">Gender</label>
-                                    <select 
+                                    <select
                                         ref={sGenderRef}
-                                        className="custom-input" value={signupData.gender} onChange={(e)=>setSignupData({...signupData, gender:e.target.value})}
+                                        className="custom-input" value={signupData.gender} onChange={(e) => setSignupData({ ...signupData, gender: e.target.value })}
                                     >
                                         <option value="">Select</option>
                                         <option value="Male">Male</option>
@@ -299,10 +346,10 @@ function Login() {
                                 </div>
                                 <div className="input-box">
                                     <label className="input-label">Campus Name</label>
-                                    <input 
+                                    <input
                                         ref={sCampusRef}
-                                        className="custom-input" type="text" placeholder="AIT Campus" 
-                                        value={signupData.campus} onChange={(e)=>setSignupData({...signupData, campus:e.target.value})} 
+                                        className="custom-input" type="text" placeholder="AIT Campus"
+                                        value={signupData.campus} onChange={(e) => setSignupData({ ...signupData, campus: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -310,34 +357,34 @@ function Login() {
                             <div className="grid-row">
                                 <div className="input-box">
                                     <label className="input-label">Create Password</label>
-                                    <div style={{position:'relative'}}>
-                                        <input 
+                                    <div style={{ position: 'relative' }}>
+                                        <input
                                             ref={sPassRef}
-                                            className="custom-input" type={showSignupPass ? "text" : "password"} placeholder="Min 8 chars" 
-                                            value={signupData.password} onChange={(e)=>setSignupData({...signupData, password:e.target.value})} 
+                                            className="custom-input" type={showSignupPass ? "text" : "password"} placeholder="Min 8 chars"
+                                            value={signupData.password} onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                                         />
-                                        <span onClick={() => setShowSignupPass(!showSignupPass)} style={{position:'absolute', right:'15px', top:'15px', cursor:'pointer', color:'#888', fontSize:'20px'}}>
+                                        <span onClick={() => setShowSignupPass(!showSignupPass)} style={{ position: 'absolute', right: '15px', top: '15px', cursor: 'pointer', color: '#888', fontSize: '20px' }}>
                                             {showSignupPass ? "🙈" : "👁️"}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="input-box">
                                     <label className="input-label">Confirm Password</label>
-                                    <div style={{position:'relative'}}>
-                                        <input 
+                                    <div style={{ position: 'relative' }}>
+                                        <input
                                             ref={sConfirmRef}
-                                            className="custom-input" type={showConfirmPass ? "text" : "password"} placeholder="Re-enter" 
-                                            value={signupData.confirmpass} onChange={(e)=>setSignupData({...signupData, confirmpass:e.target.value})} 
+                                            className="custom-input" type={showConfirmPass ? "text" : "password"} placeholder="Re-enter"
+                                            value={signupData.confirmpass} onChange={(e) => setSignupData({ ...signupData, confirmpass: e.target.value })}
                                         />
-                                        <span onClick={() => setShowConfirmPass(!showConfirmPass)} style={{position:'absolute', right:'15px', top:'15px', cursor:'pointer', color:'#888', fontSize:'20px'}}>
+                                        <span onClick={() => setShowConfirmPass(!showConfirmPass)} style={{ position: 'absolute', right: '15px', top: '15px', cursor: 'pointer', color: '#888', fontSize: '20px' }}>
                                             {showConfirmPass ? "🙈" : "👁️"}
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
-                            <button className="submit-btn" style={{marginTop:'15px'}} onClick={handleSignup}>Register Account</button>
-                            
+                            <button className="submit-btn" style={{ marginTop: '15px' }} onClick={handleSignup}>Register Account</button>
+
                             <p className="switch-bottom">
                                 Already have an account? <span onClick={() => setActiveTab('login')}>Log In</span>
                             </p>
@@ -354,14 +401,14 @@ function Login() {
                             <div className="clock-icon">🕒</div>
                             <div className="overlay-title">Ready to order?</div>
                             <div className="overlay-desc">
-                                Your favorite meals are<br/>
-                                just a few clicks away.<br/>
+                                Your favorite meals are<br />
+                                just a few clicks away.<br />
                                 Skip the queue today.
                             </div>
                         </>
                     ) : (
                         <div>
-                            <div className="overlay-title" style={{textAlign:'left', marginBottom:'30px'}}>Why Register?</div>
+                            <div className="overlay-title" style={{ textAlign: 'left', marginBottom: '30px' }}>Why Register?</div>
                             <ul className="features-list">
                                 <li>Track Orders Live</li>
                                 <li>Exclusive Discounts</li>
@@ -369,11 +416,25 @@ function Login() {
                                 <li>Pre-schedule Meals</li>
                                 <li>Save Payment Methods</li>
                             </ul>
-                            <div style={{marginTop:'50px', fontSize:'24px', fontWeight:'700'}}>Join 2000+ Students</div>
+                            <div style={{ marginTop: '50px', fontSize: '24px', fontWeight: '700' }}>Join 2000+ Students</div>
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* Popup */}
+            {popup && (
+                <AuthPopup
+                    title={popup.title}
+                    message={popup.message}
+                    icon={popup.icon}
+                    btnText={popup.btnText}
+                    onConfirm={() => {
+                        if (popup.onConfirm) popup.onConfirm();
+                        setPopup(null);
+                    }}
+                />
+            )}
 
         </div>
     );

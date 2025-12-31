@@ -14,6 +14,10 @@ import Profile from "./profile";
 import Topup from "./topup";
 import Admin from "./admin";
 
+import ProtectedRoute from "./ProtectedRoute";
+
+// ... existing imports
+
 function App() {
   const [profileOpen, setProfileOpen] = useState(false);
   return (
@@ -28,13 +32,43 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forget" element={<ForgetPassword />} />
         <Route path="/reset" element={<ResetPassword />} />
-        <Route path="/menu" element={<Menu onProfile={() => setProfileOpen(true)} />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/kitchen" element={<Canteen onProfile={() => setProfileOpen(true)} />} />
-        <Route path="/pagetwo" element={<PageTwo />} />
-        <Route path="/order" element={<Order />} />
-        <Route path="/topup" element={<Topup />} />
-        <Route path="/admin" element={<Admin />} />
+
+        {/* Protected Routes */}
+        <Route path="/menu" element={
+          <ProtectedRoute>
+            <Menu onProfile={() => setProfileOpen(true)} />
+          </ProtectedRoute>
+        } />
+        <Route path="/cart" element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        } />
+        <Route path="/kitchen" element={
+          <ProtectedRoute>
+            <Canteen onProfile={() => setProfileOpen(true)} />
+          </ProtectedRoute>
+        } />
+        <Route path="/pagetwo" element={
+          <ProtectedRoute>
+            <PageTwo />
+          </ProtectedRoute>
+        } />
+        <Route path="/order" element={
+          <ProtectedRoute>
+            <Order />
+          </ProtectedRoute>
+        } />
+        <Route path="/topup" element={
+          <ProtectedRoute>
+            <Topup />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );

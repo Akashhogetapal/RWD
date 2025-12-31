@@ -1,18 +1,20 @@
 import "../css/forget.css";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthPopup from "./AuthPopup";
 
 function ForgetPassword() {
     const navigate = useNavigate();
-    
-    
+
+
     const [email, setEmail] = useState("");
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    
+    const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
+
     const inputRef = useRef(null);
 
-    
+
     useEffect(() => {
         document.body.style.overflow = "auto";
         return () => {
@@ -20,17 +22,17 @@ function ForgetPassword() {
         };
     }, []);
 
-    
+
     const isValidEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
     const isValidPhone = (val) => /^[0-9]{10}$/.test(val);
 
-    
+
     const handleSendOTP = async () => {
         const val = email.trim();
-        
+
         if (!isValidEmail(val) && !isValidPhone(val)) {
             triggerError(inputRef.current);
-            alert("Please enter a valid email or phone number.");
+            setPopup({ title: "Input Error", message: "Please enter a valid email or phone number.", icon: "⚠️" });
             return;
         }
 
@@ -43,24 +45,23 @@ function ForgetPassword() {
             const data = await res.json();
 
             if (res.status === 200 && data.success) {
-                setOtpSent(true); 
-                alert("OTP Sent Successfully!");
+                setOtpSent(true);
+                setPopup({ title: "OTP Sent", message: "Verification code sent successfully!", icon: "📩", btnText: "Okay" });
             } else {
                 triggerError(inputRef.current);
-                alert(data.message || "Failed to send OTP.");
+                setPopup({ title: "Failed", message: data.message || "Failed to send OTP.", icon: "❌" });
             }
         } catch (error) {
             console.error("Error:", error);
-            
-            alert("Server Error.");
+            setPopup({ title: "Server Error", message: "Something went wrong.", icon: "❌" });
         }
     };
 
-    
+
     const handleVerifyOTP = async () => {
         const otpValue = otp.join("").trim();
         if (otpValue.length !== 6) {
-            alert("Please enter the complete 6-digit code.");
+            setPopup({ title: "Invalid Input", message: "Please enter the complete 6-digit code.", icon: "⚠️" });
             return;
         }
 
@@ -76,16 +77,16 @@ function ForgetPassword() {
                 localStorage.setItem("resetEmail", email);
                 navigate("/reset");
             } else {
-                alert("Invalid OTP.");
+                setPopup({ title: "Verification Failed", message: "Invalid OTP. Please try again.", icon: "❌" });
                 setOtp(["", "", "", "", "", ""]);
             }
         } catch (err) {
             console.error(err);
-            alert("Verification Failed.");
+            setPopup({ title: "Server Error", message: "Verification Failed.", icon: "❌" });
         }
     };
 
-    
+
     const handleOtpChange = (index, value) => {
         if (value.length > 1) return;
         const newOtp = [...otp];
@@ -101,7 +102,7 @@ function ForgetPassword() {
     };
 
     const triggerError = (el) => {
-        if(el) {
+        if (el) {
             el.classList.add("error");
             setTimeout(() => el.classList.remove("error"), 300);
             el.focus();
@@ -110,7 +111,7 @@ function ForgetPassword() {
 
     return (
         <div className="card">
-            
+
             { }
             <div onClick={() => navigate("/login")} className="back-link">
                 ← Back to Login
@@ -131,9 +132,9 @@ function ForgetPassword() {
                     placeholder="Enter email or phone number"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    disabled={otpSent} 
+                    disabled={otpSent}
                 />
-                
+
                 <button className="btn-get-otp" onClick={handleSendOTP}>
                     {otpSent ? "Resend OTP" : "Get OTP"}
                 </button>
@@ -141,7 +142,7 @@ function ForgetPassword() {
 
             { }
             <div className={`otp-section ${otpSent ? "visible" : ""}`}>
-                
+
                 <div className="divider">VERIFY</div>
 
                 <div className="input-group">
@@ -167,6 +168,19 @@ function ForgetPassword() {
                 </button>
             </div>
 
+            {/* Popup */}
+            {popup && (
+                <AuthPopup
+                    title={popup.title}
+                    message={popup.message}
+                    icon={popup.icon}
+                    btnText={popup.btnText || "OK"}
+                    onConfirm={() => {
+                        if (popup.onConfirm) popup.onConfirm();
+                        setPopup(null);
+                    }}
+                />
+            )}
         </div>
     );
 }

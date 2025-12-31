@@ -1,6 +1,7 @@
 import "../css/pass.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthPopup from "./AuthPopup";
 
 function ResetPassword() {
     const navigate = useNavigate();
@@ -9,27 +10,32 @@ function ResetPassword() {
     const [showPass1, setShowPass1] = useState(false);
     const [showPass2, setShowPass2] = useState(false);
     const [email, setEmail] = useState("");
+    const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("resetEmail");
         if (storedEmail) {
             setEmail(storedEmail);
         } else {
-            alert("Session expired. Please verify your email again.");
-            navigate("/forget");
+            setPopup({
+                title: "Session Expired",
+                message: "Please verify your email again.",
+                icon: "⏰",
+                btnText: "Verify Again",
+                onConfirm: () => navigate("/forget")
+            });
         }
-        
-        
+
         document.body.style.overflow = "auto";
     }, [navigate]);
 
     const handleReset = async () => {
         if (!pass1 || !pass2) {
-            alert("Please fill in both password fields.");
+            setPopup({ title: "Incomplete", message: "Please fill in both password fields.", icon: "⚠️" });
             return;
         }
         if (pass1 !== pass2) {
-            alert("Passwords do not match.");
+            setPopup({ title: "Mismatch", message: "Passwords do not match.", icon: "⚠️" });
             return;
         }
 
@@ -46,15 +52,26 @@ function ResetPassword() {
             const data = await res.json();
 
             if (res.status === 200 && data.success) {
-                alert("Password reset successfully! Login now.");
-                localStorage.removeItem("resetEmail");
-                navigate("/login");
+                setPopup({
+                    title: "Success! 🎉",
+                    message: "Password reset successfully! Login now.",
+                    icon: "✅",
+                    btnText: "Go to Login",
+                    onConfirm: () => {
+                        localStorage.removeItem("resetEmail");
+                        navigate("/login");
+                    }
+                });
             } else {
-                alert(data.message || "Something went wrong.");
+                setPopup({
+                    title: "Error",
+                    message: data.message || "Something went wrong.",
+                    icon: "❌"
+                });
             }
         } catch (err) {
             console.error(err);
-            alert("Server Error. Please try again.");
+            setPopup({ title: "Server Error", message: "Please try again.", icon: "❌" });
         }
     };
 
@@ -100,6 +117,20 @@ function ResetPassword() {
             <button className="btn-save" onClick={handleReset}>
                 Save New Password
             </button>
+
+            {/* Popup */}
+            {popup && (
+                <AuthPopup
+                    title={popup.title}
+                    message={popup.message}
+                    icon={popup.icon}
+                    btnText={popup.btnText || "OK"}
+                    onConfirm={() => {
+                        if (popup.onConfirm) popup.onConfirm();
+                        setPopup(null);
+                    }}
+                />
+            )}
         </div>
     );
 }

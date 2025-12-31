@@ -1,0 +1,92 @@
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    display: grid;
+    place-items: center;
+    z-index: 100000;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.popup-card {
+    background: linear-gradient(135deg, #FFF6E8 0%, #ffffff 100%);
+    padding: 30px;
+    width: 90%;
+    max-width: 350px;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border: 1px solid rgba(255, 112, 67, 0.2);
+
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    animation: popIn 0.5s cubic-bezier(0.3, 1.2, 0.4, 1) forwards 0.1s;
+}
+
+.popup-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    display: inline-block;
+    animation: bounceIcon 1s infinite alternate ease-in-out;
+}
+
+.popup-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #FF7043;
+    margin-bottom: 10px;
+}
+
+.popup-message {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.popup-btn {
+    background: #FF7043;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 112, 67, 0.3);
+}
+
+.popup-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes bounceIcon {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-8px);
+    }
+}
