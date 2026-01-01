@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import "../css/canteen.css";
 import Profile from "./profile";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function Canteen() {
   const [open, setOpen] = useState(false);
@@ -15,30 +16,10 @@ function Canteen() {
   const kitchenParam = searchParams.get("kitchen") || searchParams.get("name");
   const gmailParam = searchParams.get("gmail") || searchParams.get("user");
 
-  const dbToDisplay = {
-    "Main Course": "Central Mess",
-    "Quick Bites": "Snack Corner",
-    "Sweet Tooth": "Cafe Delight",
-    "Beverages": "Juice Bar"
-  };
-
-  const displayToDb = {
-    "Central Mess": "Main Course",
-    "Snack Corner": "Quick Bites",
-    "Cafe Delight": "Sweet Tooth",
-    "Juice Bar": "Beverages"
-  };
-
-  let dbCategory = kitchenParam;
-  let displayName = kitchenParam;
-
-  if (displayToDb[kitchenParam]) {
-    dbCategory = displayToDb[kitchenParam];
-    displayName = kitchenParam;
-  } else if (dbToDisplay[kitchenParam]) {
-    dbCategory = kitchenParam;
-    displayName = dbToDisplay[kitchenParam];
-  }
+  // Simplification: We migrated DB so kitchenParam matches kitchen field in DB directly.
+  // "Central Mess" -> kitchen: "Central Mess"
+  const dbCategory = kitchenParam;
+  const displayName = kitchenParam;
 
   const kitchenImages = {
     "Main Course": "https://res.cloudinary.com/dxijfcgpw/image/upload/v1765875597/WhatsApp_Image_2025-12-15_at_21.23.13_86254f98_qe7fjr.jpg",
@@ -59,7 +40,7 @@ function Canteen() {
     async function fetchItems() {
       try {
         setLoading(true);
-        const res = await fetch("https://rwd.up.railway.app/auth/filter", {
+        const res = await fetch(`${API_BASE_URL}/auth/filter`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ category: dbCategory })
@@ -96,7 +77,7 @@ function Canteen() {
         return;
       }
 
-      const res = await fetch("https://rwd.up.railway.app/auth/add2cart", {
+      const res = await fetch(`${API_BASE_URL}/auth/add2cart`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,6 +85,7 @@ function Canteen() {
           itemprice: item.price,
           itemsrc: item.imageUrl,
           itemname: item.name,
+          kitchen: dbCategory // Pass correct kitchen name
         })
       });
 

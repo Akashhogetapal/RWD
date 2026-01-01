@@ -12,6 +12,8 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
 | [**Products & Search**](#products--search) | Filter and Search |
 | [**Wallet**](#wallet) | Balance and Transactions |
 | [**Topup Operations**](#topup-operations) | Topup Wallet, View History |
+| [**Shopkeeper Portal**](#shopkeeper-portal) | Login, Manage Orders, Update Status |
+| [**User Orders**](#user-orders-live-tracking) | Live Tracking, Multi-Kitchen History |
 
 ---
 

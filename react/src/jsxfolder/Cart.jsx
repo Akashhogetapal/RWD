@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Profile from "./profile";
 import { useNavigate } from "react-router-dom";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function Cart() {
     const navigate = useNavigate();
@@ -45,7 +46,7 @@ function Cart() {
     const fetchCart = async () => {
         try {
             setLoading(true);
-            const res = await fetch("https://rwd.up.railway.app/auth/returncart", {
+            const res = await fetch(`${API_BASE_URL}/auth/returncart`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user: userEmail }),
@@ -68,7 +69,7 @@ function Cart() {
             ? { user: userEmail, itemname: item.itemname, itemprice: item.itemprice, itemsrc: item.itemsrc }
             : { user: userEmail, itemname: item.itemname };
 
-        fetch(`https://rwd.up.railway.app/auth/${endpoint}`, {
+        fetch(`${API_BASE_URL}/auth/${endpoint}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -78,7 +79,7 @@ function Cart() {
 
     const handleDelete = (item) => {
         setCartItems(prev => prev.filter(i => i._id !== item._id));
-        fetch("https://rwd.up.railway.app/auth/delete-item", {
+        fetch(`${API_BASE_URL}/auth/delete-item`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user: userEmail, itemname: item.itemname })
@@ -99,7 +100,7 @@ function Cart() {
 
         try {
 
-            const res = await fetch("https://rwd.up.railway.app/auth/getwallet", {
+            const res = await fetch(`${API_BASE_URL}/auth/getwallet`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ key: userKey })
@@ -121,7 +122,7 @@ function Cart() {
             }
 
 
-            const payRes = await fetch("https://rwd.up.railway.app/auth/updatewallet", {
+            const payRes = await fetch(`${API_BASE_URL}/auth/updatewallet`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ key: userKey, amount: -grandTotal, utr: Date.now() })
@@ -154,7 +155,7 @@ function Cart() {
 
     const placeOrder = async () => {
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/placeorder", {
+            const res = await fetch(`${API_BASE_URL}/auth/placeorder`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -225,7 +226,7 @@ function Cart() {
                                             <VegIcon />
                                             <h3>{item.itemname}</h3>
                                         </div>
-                                        <p className="cc-item-source">From: Central Mess</p>
+                                        <p className="cc-item-source">From: {item.kitchen || "Central Mess"}</p>
                                         <p className="cc-item-price">₹{item.itemprice}</p>
                                     </div>
                                 </div>

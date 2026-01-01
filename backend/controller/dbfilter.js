@@ -1,23 +1,18 @@
 const Item = require('../models/item');
 const fuzz = require("fuzzball");
+
 const filter = async (req, res) => {
     try {
         const { category } = req.body;
 
-        let items;
-        let count;
-        if (category === "All") {
-            count= await Item.countDocuments()
-            items = await Item.aggregate([
-                {$sample:{size:count}}
-            ]);
-        } else {
-            count =await Item.countDocuments({category});
-            items = await Item.aggregate([
-                {$match:{category}},
-                {$sample:{size : count}}
-            ]);
+        if (!category || category === "All") {
+            const items = await Item.find({});
+            return res.status(200).json({ success: true, items });
         }
+
+        const items = await Item.find({
+            $or: [{ kitchen: category }, { category: category }]
+        });
 
         return res.status(200).json({
             message: "Filtered successfully",
@@ -52,7 +47,7 @@ const search = async (req, res) => {
         const fuzzyHits = [];
 
         allItems.forEach(item => {
-            const text = `${item.name}`.toLowerCase();
+            const text = `${item.name} `.toLowerCase();
             const score = fuzz.partial_ratio(query, text);
 
             if (score >= 70) {
@@ -76,4 +71,4 @@ const search = async (req, res) => {
     }
 };
 
-module.exports = { filter,search};
+module.exports = { filter, search };

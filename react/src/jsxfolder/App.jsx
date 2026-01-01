@@ -15,6 +15,8 @@ import Topup from "./topup";
 import Admin from "./admin";
 
 import ProtectedRoute from "./ProtectedRoute";
+import ShopLogin from "./ShopLogin";
+import ShopDashboard from "./ShopDashboard";
 
 // ... existing imports
 
@@ -32,6 +34,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/forget" element={<ForgetPassword />} />
         <Route path="/reset" element={<ResetPassword />} />
+
+        {/* Shopkeeper Routes */}
+        <Route path="/shop/login" element={<ShopLogin />} />
+        <Route path="/shop/dashboard" element={<ShopDashboard />} />
 
         {/* Protected Routes */}
         <Route path="/menu" element={
