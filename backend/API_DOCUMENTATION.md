@@ -385,3 +385,114 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
       ]
     }
     ```
+
+---
+
+## Shopkeeper Portal
+
+### 20. Shopkeeper Login
+*   **Endpoint:** `/auth/shop/login`
+*   **Method:** `POST`
+*   **Description:** Authenticates a shopkeeper/kitchen staff.
+*   **Request Body:**
+    ```json
+    {
+      "email": "central@college.edu",
+      "password": "password123"
+    }
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "message": "Login successful",
+      "kitchenName": "Central Mess",
+      "name": "Central Manager"
+    }
+    ```
+*   **Response (Error - 400):** Invalid credentials.
+
+### 21. Get Shop Orders
+*   **Endpoint:** `/auth/shop/orders`
+*   **Method:** `POST`
+*   **Description:** Fetches all orders for a specific kitchen.
+*   **Request Body:**
+    ```json
+    {
+      "kitchenName": "Central Mess"
+    }
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "orders": [
+        {
+          "_id": "67756f...",
+          "user": "student@college.edu",
+          "status": "Pending",
+          "items": [...],
+          "totalAmount": 150,
+          "createdAt": "2024-01-01T12:00:00Z"
+        }
+      ]
+    }
+    ```
+
+### 22. Update Order Status
+*   **Endpoint:** `/auth/shop/update-status`
+*   **Method:** `POST`
+*   **Description:** Updates the status of an order (e.g., Pending -> Accepted -> Ready).
+*   **Request Body:**
+    ```json
+    {
+      "orderId": "67756f...",
+      "status": "Accepted" 
+    }
+    ```
+*   **Allowed Statuses:** `Pending`, `Accepted`, `Preparing`, `Ready`, `Served`, `Rejected`
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "message": "Status updated"
+    }
+    ```
+
+---
+
+## User Orders (Live Tracking)
+
+### 23. Get My Orders
+*   **Endpoint:** `/auth/my-orders`
+*   **Method:** `POST`
+*   **Description:** Fetches all active and past orders for a user from *all* kitchens, sorted by date.
+*   **Request Body:**
+    ```json
+    {
+      "user": "john@example.com"
+    }
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "orders": [
+        {
+          "_id": "67756...",
+          "kitchen": "Central Mess",
+          "status": "Preparing",
+          "items": [...],
+          "totalAmount": 120,
+          "createdAt": "..."
+        },
+        {
+          "_id": "67759...",
+          "kitchen": "Snack Corner",
+          "status": "Ready",
+          "items": [...],
+          "totalAmount": 50
+        }
+      ]
+    }
+    ```
