@@ -23,30 +23,61 @@ background-color: #292929;
 
 .admin-header h1 {
   color: white;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   font-weight: 500;
-  border-bottom: 2px solid #ffffff;
+  /* border-bottom: 1px solid #ffffff; */
   padding-top: 8px;
+  text-decoration: 2px underline;
 }
 .red-i {
   color: red;
 }
 .req{
-    width: 70vw;
+    width: 64vw;
     height: 50vh;
     margin-top: 10px;
-    margin-right: 36%;
+    margin-right: 50%;
     color: white;
-    border: 2px solid white;
     background-color: #5E5E5E;
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     overflow-y: scroll;
-    /* justify-content: flex-start; */
 }
 .incom-para{
     /* margin-top: 5px; */
     font-size: 20px;
     padding: 10px;
+    text-decoration: 1.5px underline;
+}
+.main-req-row{
+    display: flex;
+    flex-direction: column;
+
+}
+.req-row{
+    width: 95%;
+    height:45px;
+    background-color:#292929;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-left: 20px;
+}
+.req-row span {
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+
+/* Vertical line beside every word */
+.req-row span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom:-20%;
+  height: 140%;
+  width: 2.5px;
+  background-color:#5E5E5E;
+  border-radius: 5px;
 }
