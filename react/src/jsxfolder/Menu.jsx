@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import Profile from "./profile";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function Menu({ onProfile }) {
     const [profileOpen, setProfileOpen] = useState(false);
@@ -20,7 +21,7 @@ function Menu({ onProfile }) {
 
     const fetchItems = async (category) => {
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/filter", {
+            const res = await fetch(`${API_BASE_URL}/auth/filter`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ category })
@@ -49,7 +50,7 @@ function Menu({ onProfile }) {
         }
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/search", {
+            const res = await fetch(`${API_BASE_URL}/auth/search`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ query })
@@ -97,7 +98,7 @@ function Menu({ onProfile }) {
         }
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/add2cart", {
+            const res = await fetch(`${API_BASE_URL}/auth/add2cart`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -105,6 +106,7 @@ function Menu({ onProfile }) {
                     itemprice: item.price,
                     itemsrc: item.imageUrl,
                     itemname: item.name,
+                    kitchen: item.kitchen || "Central Mess" // Use standardized kitchen field
                 })
             });
             const data = await res.json();
@@ -178,11 +180,11 @@ function Menu({ onProfile }) {
                 </div>
 
                 <div className="filter">
-                    {["All", "Quick Bites", "Main Course", "Sweet Tooth", "Beverages"].map(f => (
-                        <div key={f} className={`fbox ${activeFilter === f ? "active" : ""}`} onClick={() => handleFilterClick(f)}>
-                            {f}
-                        </div>
-                    ))}
+                    <button className={`fbox ${activeFilter === "All" ? "active" : ""}`} onClick={() => handleFilterClick("All")}>All</button>
+                    <button className={`fbox ${activeFilter === "Central Mess" ? "active" : ""}`} onClick={() => handleFilterClick("Central Mess")}>Central Mess</button>
+                    <button className={`fbox ${activeFilter === "Snack Corner" ? "active" : ""}`} onClick={() => handleFilterClick("Snack Corner")}>Snack Corner</button>
+                    <button className={`fbox ${activeFilter === "Cafe Delight" ? "active" : ""}`} onClick={() => handleFilterClick("Cafe Delight")}>Cafe Delight</button>
+                    <button className={`fbox ${activeFilter === "Juice Bar" ? "active" : ""}`} onClick={() => handleFilterClick("Juice Bar")}>Juice Bar</button>
                 </div>
             </div>
 
@@ -248,7 +250,7 @@ function Menu({ onProfile }) {
                         <div className="titem">
                             <div className="itemtext">
                                 <h3>{item.name}</h3>
-                                <p>{item.category}</p>
+                                <p>{item.kitchen || "Central Mess"}</p>
                             </div>
                             <div className="cart-row">
                                 <div className="itemprice">

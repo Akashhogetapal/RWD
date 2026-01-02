@@ -1,7 +1,7 @@
 # Canteen Connect - Full Stack RWD Project
 
 ## 📖 Overview
-**Canteen Connect** is a complete full-stack web application designed to digitize campus dining. It features a robust **Node.js/Express backend** managing users, orders, and wallets, paired with a responsive **React frontend** for a seamless student experience....
+**Canteen Connect** is a complete full-stack web application designed to digitize campus dining. It features a robust **Node.js/Express backend** managing users, orders, and wallets, paired with a responsive **React frontend** for a seamless student experience.
 
 ---
 
@@ -18,20 +18,19 @@ c:/RWD
 
 ### 1. 🖥️ Frontend (`/react`)
 Built with **React (Vite)**, focusing on responsive design and smooth user interaction.
-*   **Core Stack**: React 18, React Router DOM, Vanilla CSS (Scoped)...
+*   **Core Stack**: React 18, React Router DOM, Vanilla CSS (Scoped).
 *   **Key Directories**:
-    *   `src/jsxfolder`: React Components (`Canteen.jsx`, `Cart.jsx`, `menu.jsx`, etc.)
-    *   `src/css`: Scoped CSS modules to prevent styling conflicts.
-*   **Features**: Dynamic routing for kitchens, cart management, real-time scheduled ordering.
+    *   `src/jsxfolder`: React Components (`Canteen.jsx`, `Cart.jsx`, `ShopDashboard.jsx`, etc.)
+    *   `src/css`: Scoped CSS modules.
+*   **Features**: Dynamic routing, Cart management, Live Order Tracking, Shopkeeper Dashboard.
 
 ### 2. 🔌 Backend (`/backend`)
 A RESTful API built with **Node.js** and **Express**, connecting to a MongoDB database.
-*   **Core Stack**: Node.js, Express.js, Mongoose, JWT (JSON Web Tokens).
+*   **Core Stack**: Node.js, Express.js, Mongoose, JWT.
 *   **Key Directories**:
-    *   `controller/`: Business logic for Auth, Cart, Orders.
-    *   `models/`: Mongoose schemas (User, Order, Item).
-    *   `routes/`: API route definitions (`auth.js`, etc.).
-    *   `middleware/`: Authentication checks.
+    *   `controller/`: Business logic (Auth, Cart, Shop, Orders).
+    *   `models/`: Mongoose schemas (User, Order, Item, Shopkeeper).
+    *   `routes/`: API route definitions (`auth.js`).
 *   **Documentation**: [📄 Read Backend API Documentation](backend/API_DOCUMENTATION.md)
 
 ---
@@ -40,14 +39,32 @@ A RESTful API built with **Node.js** and **Express**, connecting to a MongoDB da
 
 ### 🔐 Authentication & Security
 *   **JWT Auth**: Stateless authentication using JSON Web Tokens.
-*   **Key System**: Unique 8-char `key` assigned to users for wallet transactions and identification.
+*   **Key System**: Unique 8-char `key` assigned to users for wallet transactions.
 *   **Password Reset**: OTP-based verification flow via email.
 
 ### 🛒 Ordering Process
-1.  **Selection**: Users browse kitchens (`/menu`) and add items to Cart (`/kitchen`).
-2.  **Cart Management**: Items are stored in the backend cart collection.
-3.  **Payment**: Wallet interactions verify balance and deduct amounts securely.
-4.  **Order Placement**: Backend moves items from `Cart` to `Orders` collection..
+1.  **Selection**: Users browse kitchens (`/menu`) and add items to Cart.
+2.  **Payment**: Wallet interactions verify balance and deduct amounts.
+3.  **Order Placement**: Backend moves items from `Cart` to specific Kitchen Order collections.
+
+### 👨‍🍳 Shopkeeper Portal (New!)
+A dedicated dashboard for kitchen staff.
+*   **Login**: `/shop/login` (Separate credentials for each kitchen).
+*   **Dashboard**: Live polling of orders, organized by status (Pending, Accepted, Preparing, Ready).
+
+### 📦 Live Order Tracking (New!)
+*   **User View**: Students can track their order status in real-time under "My Orders".
+*   **Robust Backend**: Orders are stored in 4 separate collections (`OrderCentralMess`, `OrderSnackCorner`, etc.) for stability.
+
+---
+
+## 📚 Documentation & Guides
+
+| Document | Description |
+| :--- | :--- |
+| [**Backend API Docs**](backend/API_DOCUMENTATION.md) | Complete API reference for Auth, Cart, Wallet, and Shopkeeper. |
+| [**React Documentation**](react/REACT_DOCUMENTATION.md) | Deep dive into Frontend structure, Components, and Logic. |
+| [**Interactive QA Guide**](https://lets-c.vercel.app/html/test.html) | **New!** A web-based "Quick Start" guide for testers without GitHub access. |
 
 ---
 
@@ -65,23 +82,25 @@ A RESTful API built with **Node.js** and **Express**, connecting to a MongoDB da
 
 ---
 
-## 📂 detailed File Structure
+## 📂 Detailed File Structure
 
 ```
 c:/RWD
 ├── backend/
-│   ├── controller/       # Logic: authController, cartController
-│   ├── models/           # DB Schemas: User, Order, Item
-│   ├── routes/           # Endpoints: /auth/login, /auth/cart
+│   ├── controller/       # Logic: auth, cart, shopController
+│   ├── models/           # DB Schemas: User, Order(s), Item, Shopkeeper
+│   ├── routes/           # Endpoints: auth.js
 │   ├── server.js         # Entry Point
 │   └── API_DOCUMENTATION.md # Full API Reference
 │
 ├── react/
 │   ├── src/
-│   │   ├── jsxfolder/    # UI Components
+│   │   ├── jsxfolder/    # UI Components (Canteen, Cart, ShopDashboard)
 │   │   ├── css/          # Stylesheets
 │   │   └── main.jsx      # DOM Rendering
-│   └── package.json      # Dependencies
+│   ├── public/           # Static assets (qa_guide.html)
+│   └── REACT_DOCUMENTATION.md # Frontend Docs
 │
+├── TESTING_GUIDE.md      # Manual Testing Instructions
 └── assets/               # Project-wide static files
 ```

@@ -2,6 +2,7 @@ import "../css/pass.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function ResetPassword() {
     const navigate = useNavigate();
@@ -40,7 +41,7 @@ function ResetPassword() {
         }
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/reset", {
+            const res = await fetch(`${API_BASE_URL}/auth/reset`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

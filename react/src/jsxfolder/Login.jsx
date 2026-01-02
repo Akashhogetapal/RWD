@@ -2,6 +2,7 @@ import "../css/login.css";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function Login() {
     const navigate = useNavigate();
@@ -51,7 +52,7 @@ function Login() {
         if (!password) { triggerErrorAnimation(passwordRef, "Password Required"); return; }
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/login", {
+            const res = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -162,7 +163,7 @@ function Login() {
         };
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/signup", {
+            const res = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(bodydata)
@@ -285,6 +286,11 @@ function Login() {
 
                             <p className="switch-bottom">
                                 Don't have an account? <span onClick={() => setActiveTab('signup')}>Sign Up</span>
+                            </p>
+                            <p className="switch-bottom" style={{ marginTop: '10px', fontSize: '12px' }}>
+                                <span onClick={() => navigate("/shop/login")} style={{ color: '#FF7043', cursor: 'pointer', textDecoration: 'underline' }}>
+                                    Shop Owner? Login Here
+                                </span>
                             </p>
                         </>
                     )}

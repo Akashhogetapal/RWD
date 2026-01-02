@@ -13,21 +13,25 @@ const itemSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    kitchen: {
+        type: String,
+        required: true
+    },
     type: {
         type: String,
         required: true
     },
     tags: {
-        type: [String],     
-        required: false     
+        type: [String],
+        required: false
     },
     imageUrl: {
         type: String,
         required: true
     },
     rating: {
-        type: Number,       
-        required: false    
+        type: Number,
+        required: false
     },
     available: {
         type: Boolean,

@@ -1,6 +1,7 @@
 import "../css/profile.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
 function Profile({ open, onClose }) {
   const [user, setUser] = useState(null);
@@ -21,7 +22,7 @@ function Profile({ open, onClose }) {
         }
 
         try {
-          const res = await fetch(`https://rwd.up.railway.app/auth/profile?key=${key}`);
+          const res = await fetch(`${API_BASE_URL}/auth/profile?key=${key}`);
           const data = await res.json();
           if (data.success) setUser(data.body);
         } catch (err) {

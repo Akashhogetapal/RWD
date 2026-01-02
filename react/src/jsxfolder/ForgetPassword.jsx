@@ -2,6 +2,7 @@ import "../css/forget.css";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function ForgetPassword() {
     const navigate = useNavigate();
@@ -37,7 +38,7 @@ function ForgetPassword() {
         }
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/forget", {
+            const res = await fetch(`${API_BASE_URL}/auth/forget`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: val }),
@@ -66,7 +67,7 @@ function ForgetPassword() {
         }
 
         try {
-            const res = await fetch("https://rwd.up.railway.app/auth/verify", {
+            const res = await fetch(`${API_BASE_URL}/auth/verify`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, otp: otpValue }),

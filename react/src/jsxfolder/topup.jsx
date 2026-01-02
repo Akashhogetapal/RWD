@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/topup.css";
 import scanner from "../images/scanner.png";
 import AuthPopup from "./AuthPopup";
 
 function Topup() {
+  const navigate = useNavigate();
   const [utr, setUtr] = useState("");
   const [amount, setAmount] = useState(0);
   const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
@@ -22,7 +24,12 @@ function Topup() {
       title: "Processing",
       message: `Proceeding to pay ₹${amount}`,
       icon: "💸",
-      btnText: "Confirm"
+      btnText: "Confirm",
+      onConfirm: () => {
+        // Mock topup success
+        alert("Topup Successful! (Mock)");
+        navigate("/cart"); // improved flow: go back to cart to finish order
+      }
     });
   };
 
