@@ -38,7 +38,6 @@ background-color: #292929;
     width: 100%;
     height: auto;
     gap: 1px;
-    margin-right:50%;
 }
 .req , .activity{
     width: 64vw;
@@ -142,7 +141,7 @@ background-color: #292929;
     height:40px;
     padding: 0 10px; 
     width: fit-content;
-    margin-bottom: 4.8px;
+    margin-top: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -151,4 +150,84 @@ background-color: #292929;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.stat-card {
+  background: #5E5E5E;
+  padding: 14px;
+  border-radius: 10px;
+  width: 300px;
+  height: 115px;
+}
+.stat-inner {
+  background: #292929;
+  border-radius: 8px;
+  padding: 0px 19px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.stat-title {
+  color: white;
+  font-size: 18px;
+  letter-spacing: 2px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.stat-number {
+  color: white;
+  font-size: 52px;
+  font-weight: 500;
+}
+.dashboard-body {
+  width: 100%;
+  display: flex;        
+  gap: 30px;
+  padding: 0 40px;
+  align-items: flex-start;
+}
+
+
+.donut-wrapper {
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.donut {
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #E7000B 0deg 36deg,   
+    #6a6a6a 36deg 360deg 
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.donut-center {
+  width: 140px;
+  height: 140px;
+  background: #292929;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.donut-value {
+  color: #44C473;
+  font-size: 36px;
+  font-weight: 600;
+}
+.left-row{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }

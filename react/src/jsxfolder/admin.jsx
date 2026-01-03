@@ -8,6 +8,7 @@ function Admin() {
                 <h1>adm<span className="red-i">I</span>n dashboard</h1>
             </div>
             </header>
+            <div className="dashboard-body">
           <div className="req-act">
           <div className="req">
             <p className="incom-para">Incomiung Reaquests</p>
@@ -63,7 +64,38 @@ function Admin() {
           </div>
          </div>
         </div>
+     <div className="left-row">
+        <div className="stats-panel">
+  <div className="stat-card">
+    <div className="stat-inner">
+      <p className="stat-title">TOTAL<br />REQUESTS</p>
+      <h1 className="stat-number">453</h1>
+    </div>
+  </div>
 
+  <div className="stat-card">
+    <div className="stat-inner">
+      <p className="stat-title">TOTAL<br />ACCEPTS</p>
+      <h1 className="stat-number">408</h1>
+    </div>
+  </div>
+
+  <div className="stat-card">
+    <div className="stat-inner">
+      <p className="stat-title">TOTAL<br />REJECTS</p>
+      <h1 className="stat-number">45</h1>
+     </div>
+   </div>
+ </div>
+<div className="donut-wrapper">
+      <div className="donut">
+        <div className="donut-center">
+          <span className="donut-value">90.07</span>
+        </div>
+      </div>
+    </div>
+   </div>
+</div>
 
         </div>
     );
