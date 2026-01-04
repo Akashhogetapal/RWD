@@ -368,7 +368,7 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
 *   **Method:** `POST`
 *   **Request Body:**
     ```json
-    { "key": "USER_KEY" }
+    {} 
     ```
 *   **Response (Success - 200):**
     ```json
@@ -386,11 +386,82 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
     }
     ```
 
+### 20. Accept Topup
+*   **Endpoint:** `/auth/accept-topup`
+*   **Method:** `POST`
+*   **Description:** Accepts a topup request, adds balance to user wallet, and logs it in history.
+*   **Request Body:**
+    ```json
+    {
+      "key": "USER_KEY",
+      "amonut": 500,
+      "utr": "UTR123456789",
+      "type": "accepted"
+    }
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "message": "Updated"
+    }
+    ```
+*   **Response (Error - 400/404):** Missing Details / Not Found.
+
+### 21. Reject Topup
+*   **Endpoint:** `/auth/reject-topup`
+*   **Method:** `POST`
+*   **Description:** Rejects a topup request and logs it in history.
+*   **Request Body:**
+    ```json
+    {
+      "key": "USER_KEY",
+      "amount": 500,
+      "utr": "UTR123456789",
+      "type": "rejected"
+    }
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "message": "Updated"
+    }
+    ```
+*   **Response (Error - 400):** Missing Details.
+
+---
+
+### 22. Get Recent Topup History
+*   **Endpoint:** `/auth/recent-topup-history`
+*   **Method:** `POST`
+*   **Description:** Fetches the 10 most recent accepted or rejected topups.
+*   **Request Body:**
+    ```json
+    {}
+    ```
+*   **Response (Success - 200):**
+    ```json
+    {
+      "success": true,
+      "data": [
+        {
+          "_id": "...",
+          "userkey": "...",
+          "amt": 500,
+          "utr": "UTR...",
+          "type": "accepted",
+          "date": "..."
+        }
+      ]
+    }
+    ```
+
 ---
 
 ## Shopkeeper Portal
 
-### 20. Shopkeeper Login
+### 23. Shopkeeper Login
 *   **Endpoint:** `/auth/shop/login`
 *   **Method:** `POST`
 *   **Description:** Authenticates a shopkeeper/kitchen staff.
@@ -412,7 +483,7 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
     ```
 *   **Response (Error - 400):** Invalid credentials.
 
-### 21. Get Shop Orders
+### 24. Get Shop Orders
 *   **Endpoint:** `/auth/shop/orders`
 *   **Method:** `POST`
 *   **Description:** Fetches all orders for a specific kitchen.
@@ -439,7 +510,7 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
     }
     ```
 
-### 22. Update Order Status
+### 25. Update Order Status
 *   **Endpoint:** `/auth/shop/update-status`
 *   **Method:** `POST`
 *   **Description:** Updates the status of an order (e.g., Pending -> Accepted -> Ready).
@@ -463,7 +534,7 @@ Base URL: `http://localhost:8080` (or our railway URL which will be used on goba
 
 ## User Orders (Live Tracking)
 
-### 23. Get My Orders
+### 26. Get My Orders
 *   **Endpoint:** `/auth/my-orders`
 *   **Method:** `POST`
 *   **Description:** Fetches all active and past orders for a user from *all* kitchens, sorted by date.
