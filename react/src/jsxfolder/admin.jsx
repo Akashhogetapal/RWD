@@ -1,6 +1,67 @@
 import "../css/admin.css"
-
+import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../config";
 function Admin() {
+const [requests, setRequests] = useState([]);
+const [activity, setActivity] = useState([]);
+const [stats, setStats] = useState({
+  total: 0,
+  accepted: 0,
+  rejected: 0
+});
+
+const fetchRequests = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/topup-history`);
+    const data = await res.json();
+    setRequests(data.data || []);
+  } catch (err) {
+    console.error(err);
+  }
+};
+const fetchActivity = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/admin/topup-history`);
+    const data = await res.json();
+    setActivity(data.data || []);
+
+    const accepted = data.data.filter(d => d.status === "ACCEPTED").length;
+    const rejected = data.data.filter(d => d.status === "REJECTED").length;
+
+    setStats({
+      total: data.data.length,
+      accepted,
+      rejected
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+useEffect(() => {
+  fetchRequests();
+  fetchActivity();
+}, []);
+
+const handleAccept = async (id) => {
+  await fetch(`${API_BASE_URL}/admin/accept-topup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id })
+  });
+  fetchRequests();
+  fetchActivity();
+};
+
+const handleReject = async (id) => {
+  await fetch(`${API_BASE_URL}/admin/reject-topup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id })
+  });
+  fetchRequests();
+  fetchActivity();
+};
     return (
         <div className="cont">
             <header>
@@ -8,6 +69,7 @@ function Admin() {
                 <h1>adm<span className="red-i">I</span>n dashboard</h1>
             </div>
             </header>
+            
             <div className="dashboard-body">
           <div className="req-act">
           <div className="req">
@@ -20,47 +82,50 @@ function Admin() {
                <span>UTR</span>
                <span>ACTION</span>
             </div>
-            
-            <div className="req-row">
+            {requests.map(req => (
+            <div className="req-row" key={req._id}>
                 <span className="user-cell">
-                  <span className="red-circle"></span>
-                       John Doe
-                     </span>
-                <span>12345</span>
-                <span>500</span>
-                <span>12345678900</span>
-               <div className="action-buttons">
-                   <button className="btn reject">✕</button>
-                    <button className="btn accept">✓</button>
-                </div>
+      <span className="red-circle"></span>
+      {req.username || "User"}
+    </span>
+    <span>{req.key}</span>
+    <span>{req.amt}</span>
+    <span>{req.utr}</span>
+    <div className="action-buttons">
+      <button className="btn reject" onClick={() => handleReject(req._id)}>✕</button>
+      <button className="btn accept" onClick={() => handleAccept(req._id)}>✓</button>
+    </div>
             </div>
+            ))}
           </div>
          </div>
 
          <div className="activity">
             <p className="incom-para">Reacent Activity</p>
           <div className="main-req-row">
-            <div className="req-row">
+            <div className="req-row" >
                <span>USER</span>
                <span>AMOUNT</span>
                <span>STATUS</span>
                <span>DATE</span>
                <span>TIME</span>
             </div>
-            
-            <div className="req-row">
-                <span className="user-cell">
-                  <span className="red-circle"></span>
-                       John Doe
-                     </span>
-                <span>123</span>
-                <span className="rejected1">
-                <span className="rejected">✕ Rejected</span> 
-                </span>
-                <span>21/12/2000</span>
-                <span>12:00 PM</span>
-
-            </div>
+            {activity.map(act => (
+            <div className="req-row" key={act._id}>
+    <span className="user-cell">
+      <span className="red-circle"></span>
+      {act.username || "User"}
+    </span>
+    <span>{act.amt}</span>
+    <span className="rejected1">
+      <span className={act.status === "ACCEPTED" ? "accepted" : "rejected"}>
+        {act.status === "ACCEPTED" ? "✓ Accepted" : "✕ Rejected"}
+      </span>
+    </span>
+    <span>{new Date(act.date).toLocaleDateString()}</span>
+    <span>{new Date(act.date).toLocaleTimeString()}</span>
+  </div>
+))}
           </div>
          </div>
         </div>
@@ -69,21 +134,21 @@ function Admin() {
   <div className="stat-card">
     <div className="stat-inner">
       <p className="stat-title">TOTAL<br />REQUESTS</p>
-      <h1 className="stat-number">453</h1>
+      <h1 className="stat-number">{stats.total}</h1>
     </div>
   </div>
 
   <div className="stat-card">
     <div className="stat-inner">
       <p className="stat-title">TOTAL<br />ACCEPTS</p>
-      <h1 className="stat-number">408</h1>
+      <h1 className="stat-number">{stats.accepted}</h1>
     </div>
   </div>
 
   <div className="stat-card">
     <div className="stat-inner">
       <p className="stat-title">TOTAL<br />REJECTS</p>
-      <h1 className="stat-number">45</h1>
+      <h1 className="stat-number">{stats.rejected}</h1>
      </div>
    </div>
  </div>
