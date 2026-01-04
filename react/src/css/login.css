@@ -6,6 +6,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+  background-color: linear-gradient(linear, #FFFFFF , #FFE0B2 );
+  
 }
 
 .login-page-wrapper {
