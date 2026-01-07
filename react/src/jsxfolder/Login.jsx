@@ -58,6 +58,7 @@ function Login() {
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
+            console.log("Login Response:", data);
 
             if (res.status === 200 && data.success) {
                 console.log("Login Success:", data);

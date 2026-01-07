@@ -1,40 +1,120 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/topup.css";
 import scanner from "../images/scanner.png";
 import AuthPopup from "./AuthPopup";
+import { API_BASE_URL } from "../config";
 
 function Topup() {
   const navigate = useNavigate();
   const [utr, setUtr] = useState("");
   const [amount, setAmount] = useState(0);
-  const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
-  const currentBalance = 1000;
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [popup, setPopup] = useState(null);
+
+  // ================= FETCH BALANCE =================
+  const fetchBalance = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/getwallet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          key: localStorage.getItem("userKey") // IMPORTANT
+        })
+      });
+
+      const data = await res.json();
+      console.log("Wallet data:", data);
+
+      if (data.balance !== undefined) {
+        setCurrentBalance(data.balance);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 🔥 CALL ON PAGE LOAD
+  useEffect(() => {
+    fetchBalance();
+  }, []);
 
   const quickAdd = (value) => {
     setAmount(value);
   };
 
+  // ================= SUBMIT TOPUP =================
   const handlePay = () => {
     if (amount <= 0) {
-      setPopup({ title: "Invalid Amount", message: "Enter a valid amount.", icon: "⚠️" });
+      setPopup({
+        title: "Invalid Amount",
+        message: "Enter a valid amount.",
+        icon: "⚠️"
+      });
       return;
     }
+
+    if (!utr || utr.length < 6) {
+      setPopup({
+        title: "Invalid UTR",
+        message: "Please enter a valid UTR number.",
+        icon: "⚠️"
+      });
+      return;
+    }
+
     setPopup({
-      title: "Processing",
-      message: `Proceeding to pay ₹${amount}`,
+      title: "Confirm Top-Up",
+      message: `Add ₹${amount} to wallet?`,
       icon: "💸",
       btnText: "Confirm",
-      onConfirm: () => {
-        // Mock topup success
-        alert("Topup Successful! (Mock)");
-        navigate("/cart"); // improved flow: go back to cart to finish order
+      onConfirm: async () => {
+        try {
+  const body = {
+    key: localStorage.getItem("key"), 
+    amt: amount,
+    utr: utr
+  };
+
+  console.log("Topup request body:", body);
+
+  const res = await fetch(`${API_BASE_URL}/auth/topup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+
+  const data = await res.json();
+  console.log("Topup response:", data);
+
+  if (data.success) {
+    setPopup({
+      title: "Success 🎉",
+      message: "Top-up request submitted successfully.",
+      icon: "✅",
+      btnText: "OK",
+      onConfirm: () => navigate("/cart")
+    });
+  } else {
+    setPopup({
+      title: "Failed",
+      message: data.message || "Top-up failed.",
+      icon: "❌"
+    });
+  }
+} catch (err) {
+  console.error(err);
+  setPopup({
+    title: "Error",
+    message: "Server error. Try again later.",
+    icon: "❌"
+  });
+}
       }
     });
   };
 
   return (
-
     <div className="topup-page">
       <h1 className="topup-title">Top-Up</h1>
 
@@ -71,18 +151,17 @@ function Topup() {
         <div className="column-sec">
           <div className="utr-wrapper">
             <p className="utr-title">ENTER UTR</p>
-
             <input
               type="text"
               value={utr}
               onChange={(e) => setUtr(e.target.value)}
-              maxLength={10}
+              maxLength={12}
               placeholder="–––– –––– ––––"
               className="utr-input"
             />
           </div>
           <div className="topup-submit-btn">
-            <button className="pay-btn" onClick={handlePay}>Submit </button>
+            <button className="pay-btn" onClick={handlePay}>Submit</button>
           </div>
         </div>
       </div>

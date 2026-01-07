@@ -76,47 +76,60 @@ const getTopups = async (req, res) => {
     }
 };
 const accepttop = async (req, res) => {
-    try {
-        let { key, amonut, type } = await req.body;
-        if (!key || amonut || type || utr) {
-            return res.status(400).json({
-                success: true,
-                message: "Missing Details",
-            })
-        }
-        else if (type == "accepted") {
-            let user = await Wallet.find({ userKey: key })
-            if (!user) {
-                return res.status(404).json({
-                    success: true,
-                    message: "Not Found",
-                })
-            }
-            else {
-                user.balance += amonut;
-                await user.save();
-                await history.create({
-                    userkey: key,
-                    amt: amonut,
-                    utr: utr,
-                    type: "accepted",
-                    date: Date.now()
-                })
-                return res.status(200).json({
-                    success: true,
-                    message: "Updated",
-                })
-            }
-        }
+  try {
+    const { key, amt, utr, type } = req.body;
+
+    if (!key || !amt || !utr || !type) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required details"
+      });
     }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false,
-            message: "Server Error"
-        })
+
+    if (type !== "accepted") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid request type"
+      });
     }
-}
+
+    
+    const userWallet = await Wallet.findOne({ userKey: key });
+
+    if (!userWallet) {
+      return res.status(404).json({
+        success: false,
+        message: "Wallet not found"
+      });
+    }
+
+    
+    userWallet.balance += Number(amt);
+    await userWallet.save();
+    await Topup.deleteOne({ utr });
+
+    
+    await history.create({
+      userkey: key,
+      amt: amt,
+      utr: utr,
+      type: "accepted",
+      date: Date.now()
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Top-up accepted and wallet updated"
+    });
+
+  } catch (error) {
+    console.error("accepttop error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+};
 const rejecttop = async (req, res) => {
     try {
         let { key, amount, type, utr } = await req.body;
