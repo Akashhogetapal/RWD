@@ -17,7 +17,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ShopLogin from "./ShopLogin";
 import ShopDashboard from "./ShopDashboard";
 
-// ...... existing imports
+// ....... existing imports
 
 function App() {
   const [profileOpen, setProfileOpen] = useState(false);
