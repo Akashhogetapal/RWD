@@ -9,7 +9,7 @@
 
 The project is divided into two main components within the root directory:
 
-```
+```~
 c:/RWD
 ├── backend/              # Node.js + Express API Server
 ├── react/                # React.js + Vite Client Application
