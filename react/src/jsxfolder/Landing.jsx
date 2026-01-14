@@ -20,7 +20,7 @@ function Landing() {
             <button className="primary" onClick={() => navigate("/login")}>
               Student Login
             </button>
-            <button className="secondary">Shopkeeper</button>
+            <button onClick={() => navigate("/Shop/Login")} className="secondary">Shopkeeper</button>
           </div>
         </div>
       </header>
