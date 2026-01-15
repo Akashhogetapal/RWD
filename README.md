@@ -1,7 +1,7 @@
 # Canteen Connect - Full Stack RWD Project
 
 ## 📖 Overview
-**Canteen Connect** is a complete full-stack web application designed to digitize campus dining. It features a robust **Node.js/Express backend** managing users, orders, and wallets, paired with a responsive **React frontend** for a seamless student experience.....
+**Canteen Connect** is a complete full-stack web application designed to digitize campus dining. It features a robust **Node.js/Express backend** managing users, orders, and wallets, paired with a responsive **React frontend** for a seamless student experience.......
 
 ---
 
