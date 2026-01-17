@@ -54,7 +54,7 @@ function Topup() {
       return;
     }
 
-    if (!utr || utr.length < 6) {
+    if (!utr || utr.length < 10) {
       setPopup({
         title: "Invalid UTR",
         message: "Please enter a valid UTR number.",
@@ -166,7 +166,6 @@ function Topup() {
         </div>
       </div>
 
-      {/* Popup */}
       {popup && (
         <AuthPopup
           title={popup.title}

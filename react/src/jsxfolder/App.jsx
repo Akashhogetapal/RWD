@@ -16,6 +16,7 @@ import Admin from "./admin";
 import ProtectedRoute from "./ProtectedRoute";
 import ShopLogin from "./ShopLogin";
 import ShopDashboard from "./ShopDashboard";
+import ShopDashboardd from "./Shopdashboardd";
 
 // ....... existing imports
 
@@ -72,6 +73,11 @@ function App() {
         <Route path="/admin" element={
           <ProtectedRoute>
             <Admin />
+          </ProtectedRoute>
+        } />
+        <Route path="/shopdashboardd" element={
+          <ProtectedRoute>
+            <ShopDashboardd />
           </ProtectedRoute>
         } />
       </Routes>
