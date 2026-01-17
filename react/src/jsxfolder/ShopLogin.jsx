@@ -22,7 +22,7 @@ function ShopLogin() {
                 localStorage.setItem("shopToken", "dummy_token"); // For now
                 localStorage.setItem("kitchenName", result.kitchenName);
                 localStorage.setItem("shopUser", result.name);
-                navigate("/shop/dashboard");
+                navigate("/shopdashboardd");
             } else {
                 setPopup({ title: "Login Failed", message: result.message, icon: "❌" });
             }

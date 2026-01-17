@@ -4,10 +4,12 @@ import "../css/shopdashboardd.css";
 import { API_BASE_URL } from "../config";
 
 function ShopDashboardd() {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     return (
        <div className="shopdashboardd-page-wrapper">
         <div className="header">
-         <div className="logo"> 
+         <div className="logo" onClick={() => setIsSidebarOpen(!isSidebarOpen)}> 
                 <svg width="40px" height="40px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <path fill="#FF7043" d="M768 704H256a254.688 254.688 0 0 1-64-8.416V928a32 32 0 0 0 32 32h576a32 32 0 0 0 32-32v-232.416A254.688 254.688 0 0 1 768 704z"  />
                 <path fill="#FF7043" d="M792.928 193.248A287.68 287.68 0 0 1 800 256a286.4 286.4 0 0 1-53.888 167.328c13.984-31.648 21.888-66.56 21.888-103.328a256 256 0 0 0-512 0c0 36.768 7.904 71.68 21.888 103.328A286.4 286.4 0 0 1 224 256c0-21.568 2.56-42.528 7.072-62.752A256 256 0 0 0 256 704h512a256 256 0 0 0 24.928-510.752z" />
@@ -38,6 +40,15 @@ function ShopDashboardd() {
         </div>
        </div>
      </div>   
+
+     <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+             <p className="side-item active">Incoming</p>
+             <p className="side-item">Accepted</p>
+             <p className="side-item">Rejected</p>
+             <p className="side-item">Preparing</p>
+             <p className="side-item">Ready</p>
+             <p className="side-item">Served</p>
+      </div>
         
         <div className="body">
           <div className="paras">
@@ -137,6 +148,16 @@ function ShopDashboardd() {
                        <svg fill="#808080" width="23px" height="23px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,11A5,5,0,1,0,7,6,5.006,5.006,0,0,0,12,11Zm0-8A3,3,0,1,1,9,6,3,3,0,0,1,12,3ZM3,22V18a5.006,5.006,0,0,1,5-5h8a5.006,5.006,0,0,1,5,5v4a1,1,0,0,1-2,0V18a3,3,0,0,0-3-3H8a3,3,0,0,0-3,3v4a1,1,0,0,1-2,0Z"/></svg>
                           <p className="cust-name">John Doe</p>
                    </div>
+                     <div className="order-items">
+                        <p className="para">Order Items:</p> 
+                        <p className="dish-nam">2 x masala dosa</p>
+                        <p className="dish-nam">2 x masala dosa</p>
+                     </div>
+                     <div className="price">$ 200</div>
+                  <div className="butt">
+                    <button className="acc">Accept</button>
+                    <button className="decline">Reject</button>
+                  </div>
 
 
                 </div>
