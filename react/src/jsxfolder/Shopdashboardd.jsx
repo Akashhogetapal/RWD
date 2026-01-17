@@ -118,7 +118,30 @@ function ShopDashboardd() {
 
             </div>
         </div>
+        <div className="new-orders">
+            <p className="para-neworder">New Orders</p>
+            <div className="cards">
+                <div className="card">
+                  <div className="card-head">
+                    <p>#ORD-001</p>
+                      <p className="row">
+                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <rect width="24" height="24" fill="white"/>
+                         <circle cx="12" cy="12" r="9" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                         <path d="M12 6V12L16.5 16.5" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                         </svg> 
+                         <p className="tym">10:50 AM </p>
+                     </p>
+                    </div>
+                   <div className="name">
+                       <svg fill="#808080" width="23px" height="23px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12,11A5,5,0,1,0,7,6,5.006,5.006,0,0,0,12,11Zm0-8A3,3,0,1,1,9,6,3,3,0,0,1,12,3ZM3,22V18a5.006,5.006,0,0,1,5-5h8a5.006,5.006,0,0,1,5,5v4a1,1,0,0,1-2,0V18a3,3,0,0,0-3-3H8a3,3,0,0,0-3,3v4a1,1,0,0,1-2,0Z"/></svg>
+                          <p className="cust-name">John Doe</p>
+                   </div>
 
+
+                </div>
+            </div>
+        </div>
 
 
 

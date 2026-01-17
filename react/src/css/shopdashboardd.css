@@ -140,4 +140,60 @@
     width: 55px;
     border-radius: 14px;
     background-color:  #fff1def0;
+    cursor: pointer;
+}
+.shopdashboardd-page-wrapper .para-neworder{
+    font-size: 22px;
+    font-weight: 600;
+    margin-left: 30px;
+    margin-top: 30px;
+}
+.shopdashboardd-page-wrapper .cards{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px 0;
+    overflow-x: scroll;
+    flex-direction:column;
+}
+.shopdashboardd-page-wrapper .cards .card {
+    height: 300px;
+    width:80%;
+    min-width: 70%;
+    flex-shrink:0;
+    background-color: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(255, 112, 67, 0.2);
+}
+.shopdashboardd-page-wrapper .cards .card .card-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 300;
+    padding: 15px 20px;
+    border-bottom: 1.5px solid rgba(128, 128, 128, 0.096);
+    color: #FF7043;
+}
+.shopdashboardd-page-wrapper .cards .card .tym{
+    font-size: 16px;
+    font-weight: 200;
+    color: #808080;
+}
+.shopdashboardd-page-wrapper .cards .card .row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+}
+.shopdashboardd-page-wrapper .cards .card .name{
+    font-size: 18px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 20px;
+
+
 }
