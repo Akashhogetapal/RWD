@@ -44,12 +44,25 @@ function ShopDashboardd() {
             <p>Incoming orders</p>
             <p className="real">Manage and track your orders in real time</p>
         </div>
+        <div className="boxes">
+            <div className="box box1">
+                <p>Today's Total orders</p>
+                <p>55</p>
+
+            </div>
+            <div className="box box2">
+            </div>
+            <div className="box box3">
+            </div>
+        </div>
+
+
+
+
+
+
        </div> 
-
-
-
-
-  </div>
+</div>
     )
 };
 
