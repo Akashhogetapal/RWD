@@ -5,6 +5,7 @@ import { API_BASE_URL } from "../config";
 function Admin() {
   const [requests, setRequests] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [allHistory, setAllHistory] = useState([]); // Store full history for stats
   const [stats, setStats] = useState({
     total: 0,
     accepted: 0,
@@ -37,61 +38,98 @@ function Admin() {
       console.log("Recent Activity:", data);
 
       const list = data.data || [];
-      setActivity(list);
+      setActivity(list); // Keep showing only recent 10 in the list
 
-      setStats({
-        total: list.length,
-        accepted: list.filter(i => i.status === "ACCEPTED").length,
-        rejected: list.filter(i => i.status === "REJECTED").length
-      });
+      // FETCH ALL HISTORY FOR STATS
+      // Ideally backend should provide a /stats endpoint, but for now we fetch all
+      // or we assume we need another endpoint. 
+      // Let's create a quick loop or just use what we have if the user accepts it.
+      // BUT user said "total accept total request... nothing is working".
+      // So we MUST fetch all. Let's assume we can use the same endpoint but maybe without limit?
+      // Or better, let's fetch from a new endpoint or modify the existing one.
+      // Since I cannot modify backend endlessly without permission, I will try to fetch using a different call
+      // OR I will just add a stats endpoint to backend now.
+
     } catch (err) {
       console.error(err);
     }
   };
 
+  const fetchStats = async () => {
+    try {
+      // reusing history endpoint but maybe we need a dedicated stats one.
+      // let's Assume I update backend to give me full list if I ask for it or a stats endpoint.
+      // I'll add getTopupStats to backend controller next.
+      const res = await fetch(`${API_BASE_URL}/auth/topup-stats`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStats(data.stats);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
     fetchRequests();
     fetchActivity();
+    fetchStats();
   }, []);
 
   // ================= ACTIONS =================
-const handleAccept = async (req) => {
-  const ukey = req.key;
-  const uamount = req.amt;
-  const uutr = req.utr;
+  const handleAccept = async (req) => {
+    const ukey = req.userkey; // Changed from req.key
+    const uamount = req.amt;
+    const uutr = req.utr;
 
-  console.log("Sending to backend:", {
-    key: ukey,
-    amt: uamount,
-    utr: uutr
-  });
-
-  const res = await fetch(`${API_BASE_URL}/auth/accept-topup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+    console.log("Sending to backend:", {
       key: ukey,
       amt: uamount,
-      utr: uutr,
-      type: "accepted"
-    })
-  });
+      utr: uutr
+    });
 
-  const data = await res.json();
-  console.log("Backend response:", data);
+    const res = await fetch(`${API_BASE_URL}/auth/accept-topup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        key: ukey,
+        amt: uamount,
+        utr: uutr,
+        type: "accepted"
+      })
+    });
 
-  fetchRequests();
-  fetchActivity();
-};
+    const data = await res.json();
+    console.log("Backend response:", data);
 
-  const handleReject = async (id) => {
+    fetchRequests();
+    fetchActivity();
+    fetchStats();
+  };
+
+  const handleReject = async (req) => {
+    // We must send the same structure the backend expects:
+    // { key, amount, type: "rejected", utr }
+
+    // Note: backend uses 'amount' instead of 'amt' for rejection, 
+    // but our object has 'amt'. We map it here.
+
     await fetch(`${API_BASE_URL}/auth/reject-topup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id })
+      body: JSON.stringify({
+        key: req.userkey,    // was req.key
+        amount: req.amt,     // backend expects 'amount'
+        utr: req.utr,
+        type: "rejected"
+      })
     });
     fetchRequests();
     fetchActivity();
+    fetchStats();
   };
 
   return (
@@ -107,7 +145,7 @@ const handleAccept = async (req) => {
 
           {/* ================= INCOMING REQUESTS ================= */}
           <div className="req">
-            <p className="incom-para">Incomiung Reaquests</p>
+            <p className="incom-para">Incoming Requests</p>
             <div className="main-req-row">
 
               <div className="req-row">
@@ -124,7 +162,7 @@ const handleAccept = async (req) => {
                     <span className="red-circle"></span>
                     {req.username || "User"}
                   </span>
-                  <span>{req.key}</span>
+                  <span>{req.userkey}</span>
                   <span>{req.amt}</span>
                   <span>{req.utr}</span>
                   <div className="action-buttons">
@@ -145,7 +183,7 @@ const handleAccept = async (req) => {
 
           {/* ================= RECENT ACTIVITY ================= */}
           <div className="activity">
-            <p className="incom-para">Reacent Activity</p>
+            <p className="incom-para">Recent Activity</p>
             <div className="main-req-row">
 
               <div className="req-row">

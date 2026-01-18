@@ -40,7 +40,8 @@ const createTopup = async (req, res) => {
             await wallet.save();
         } else {
             await Wallet.create({
-                user: user.email,
+                userEmail: user.email,
+                userKey: key, // Explicitly provide userKey
                 balance: amt
             });
         }
@@ -76,89 +77,128 @@ const getTopups = async (req, res) => {
     }
 };
 const accepttop = async (req, res) => {
-  try {
-    const { key, amt, utr, type } = req.body;
+    try {
+        const { key, amt, utr, type } = req.body;
 
-    if (!key || !amt || !utr || !type) {
-      return res.status(400).json({
-        success: false,
-        message: "Missing required details"
-      });
+        if (!key || !amt || !utr || !type) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing required details"
+            });
+        }
+
+        if (type !== "accepted") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid request type"
+            });
+        }
+
+
+        const userWallet = await Wallet.findOne({ userKey: key });
+
+        if (!userWallet) {
+            return res.status(404).json({
+                success: false,
+                message: "Wallet not found"
+            });
+        }
+
+
+        userWallet.balance += Number(amt);
+        await userWallet.save();
+        await Topup.deleteOne({ utr });
+
+
+        await history.create({
+            userkey: key,
+            amt: amt,
+            utr: utr,
+            type: "accepted",
+            date: Date.now()
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Top-up accepted and wallet updated"
+        });
+
+    } catch (error) {
+        console.error("accepttop error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
     }
-
-    if (type !== "accepted") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid request type"
-      });
-    }
-
-    
-    const userWallet = await Wallet.findOne({ userKey: key });
-
-    if (!userWallet) {
-      return res.status(404).json({
-        success: false,
-        message: "Wallet not found"
-      });
-    }
-
-    
-    userWallet.balance += Number(amt);
-    await userWallet.save();
-    await Topup.deleteOne({ utr });
-
-    
-    await history.create({
-      userkey: key,
-      amt: amt,
-      utr: utr,
-      type: "accepted",
-      date: Date.now()
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Top-up accepted and wallet updated"
-    });
-
-  } catch (error) {
-    console.error("accepttop error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
-  }
 };
 const rejecttop = async (req, res) => {
     try {
-        let { key, amount, type, utr } = await req.body;
-        if (!key || amount || type || utr) {
+        const { key, amount, type, utr } = req.body;
+
+        if (!key || !amount || !utr || !type) {
             return res.status(400).json({
-                success: true,
-                message: "Missing Details",
-            })
+                success: false,
+                message: "Missing Details"
+            });
         }
-        else {
-            await history.create({
-                userkey: key,
-                amt: amount,
-                utr: utr,
-                type: "rejected",
-                date: Date.now()
-            })
-            return res.status(200).json({
-                success: true,
-                message: "Updated",
-            })
+
+        if (type !== "rejected") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid request type"
+            });
         }
-    }
-    catch (error) {
+
+        await history.create({
+            userkey: key,
+            amt: amount,
+            utr: utr,
+            type: "rejected",
+            date: Date.now()
+        });
+
+        // Remove from pending list
+        const deleted = await Topup.deleteOne({ utr });
+
+        if (deleted.deletedCount === 0) {
+            console.log("Warning: Topup request not found in pending list for deletion");
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Top-up rejected and removed"
+        });
+
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
             success: false,
             message: "Server Error"
-        })
+        });
+    }
+
+    const getTopupStats = async (req, res) => {
+        try {
+            const allHistory = await history.find({});
+            const total = allHistory.length;
+            const accepted = allHistory.filter(h => h.type === "accepted").length;
+            const rejected = allHistory.filter(h => h.type === "rejected").length;
+
+            return res.status(200).json({
+                success: true,
+                stats: {
+                    total,
+                    accepted,
+                    rejected
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                success: false,
+                message: "Server Error"
+            });
+        }
     }
 }
 
@@ -182,5 +222,7 @@ module.exports = {
     getTopups,
     accepttop,
     rejecttop,
-    getRecentTopupHistory
+    rejecttop,
+    getRecentTopupHistory,
+    getTopupStats
 };

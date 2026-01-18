@@ -5,7 +5,7 @@ const { add2cart, returncart, deleteItem, removeQuantity, clearcart, getorder } 
 const getCart = require('../controller/getCart');
 const { getwallet, updatewallet } = require('../controller/wallet');
 const { profile } = require("../controller/profile")
-const { createTopup, getTopups, accepttop, rejecttop, getRecentTopupHistory } = require('../controller/topup');
+const { createTopup, getTopups, accepttop, rejecttop, getRecentTopupHistory, getTopupStats } = require('../controller/topup');
 const { saveplanner, getplanner } = require("../controller/planner");
 const { shopLogin, getShopOrders, updateOrderStatus } = require('../controller/shopController');
 const router = require('express').Router();
@@ -35,6 +35,7 @@ router.post('/topup-history', getTopups);
 router.post('/recent-topup-history', getRecentTopupHistory);
 router.post('/accept-topup', accepttop);
 router.post('/reject-topup', rejecttop);
+router.post('/topup-stats', getTopupStats);
 
 router.post('/saveplanner', saveplanner);
 router.get('/getplanner', getplanner)
