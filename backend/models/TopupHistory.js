@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const topupHistorySchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true
+    },
     userkey: {
         type: String,
         required: true

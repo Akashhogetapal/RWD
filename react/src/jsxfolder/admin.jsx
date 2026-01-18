@@ -202,8 +202,8 @@ function Admin() {
                   </span>
                   <span>{act.amt}</span>
                   <span className="rejected1">
-                    <span className={act.status === "ACCEPTED" ? "accepted" : "rejected"}>
-                      {act.status === "ACCEPTED" ? "✓ Accepted" : "✕ Rejected"}
+                    <span className={act.type === "accepted" ? "accepted" : "rejected"}>
+                      {act.type === "accepted" ? "✓ Accepted" : "✕ Rejected"}
                     </span>
                   </span>
                   <span>{new Date(act.date).toLocaleDateString()}</span>
@@ -244,7 +244,15 @@ function Admin() {
           </div>
 
           <div className="donut-wrapper">
-            <div className="donut">
+            <div
+              className="donut"
+              style={{
+                background: `conic-gradient(
+                  #44C473 0deg ${(stats.total ? (stats.accepted / stats.total) * 360 : 0)}deg,
+                  #E7000B ${(stats.total ? (stats.accepted / stats.total) * 360 : 0)}deg 360deg
+                )`
+              }}
+            >
               <div className="donut-center">
                 <span className="donut-value">
                   {stats.total ? ((stats.accepted / stats.total) * 100).toFixed(2) : 0}

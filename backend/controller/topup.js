@@ -28,23 +28,13 @@ const createTopup = async (req, res) => {
         }
 
         await Topup.create({
+            username: user.name,
             userkey: key,
             amt,
             utr
         });
 
-        let wallet = await Wallet.findOne({ user: user.email });
-
-        if (wallet) {
-            wallet.balance += amt;
-            await wallet.save();
-        } else {
-            await Wallet.create({
-                userEmail: user.email,
-                userKey: key, // Explicitly provide userKey
-                balance: amt
-            });
-        }
+        // Wallet update removed from here. Handled in accepttop.
 
         return res.status(201).json({
             success: true,
@@ -97,20 +87,42 @@ const accepttop = async (req, res) => {
 
         const userWallet = await Wallet.findOne({ userKey: key });
 
+        // If wallet doesn't exist, create it.
         if (!userWallet) {
-            return res.status(404).json({
-                success: false,
-                message: "Wallet not found"
-            });
+            // We need userEmail to create wallet. 
+            // We can fetch user details using key.
+            const user = await User.findOne({ key });
+            if (user) {
+                await Wallet.create({
+                    userEmail: user.email,
+                    userKey: key,
+                    balance: Number(amt)
+                });
+            } else {
+                // If user not found (unlikely), valid redundant check
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found for wallet creation"
+                });
+            }
+        } else {
+            userWallet.balance += Number(amt);
+            await userWallet.save();
         }
 
 
-        userWallet.balance += Number(amt);
-        await userWallet.save();
+        // userWallet.balance += Number(amt); -> moved inside else block above
+        // await userWallet.save(); -> moved inside else block above
         await Topup.deleteOne({ utr });
 
+        // Fetch user again to ensure we have the name for history (or could use user from above if defined)
+        // Optimization: check if 'user' variable from earlier scope is available? No, it's inside if(userWallet) block. 
+        // Let's just fetch user name.
+        const userDetails = await User.findOne({ key });
+        const historyName = userDetails ? userDetails.name : "Unknown User";
 
         await history.create({
+            username: historyName,
             userkey: key,
             amt: amt,
             utr: utr,
@@ -149,20 +161,24 @@ const rejecttop = async (req, res) => {
             });
         }
 
-        await history.create({
-            userkey: key,
-            amt: amount,
-            utr: utr,
-            type: "rejected",
-            date: Date.now()
-        });
-
         // Remove from pending list
         const deleted = await Topup.deleteOne({ utr });
 
         if (deleted.deletedCount === 0) {
             console.log("Warning: Topup request not found in pending list for deletion");
         }
+
+        const userDetails = await User.findOne({ key });
+        const historyName = userDetails ? userDetails.name : "Unknown User";
+
+        await history.create({
+            username: historyName,
+            userkey: key,
+            amt: amount,
+            utr: utr,
+            type: "rejected",
+            date: Date.now()
+        });
 
         return res.status(200).json({
             success: true,

@@ -1,4 +1,5 @@
 const Shopkeeper = require("../models/shopkeeper");
+const User = require("../models/user");
 const {
     OrderCentralMess,
     OrderSnackCorner,
@@ -36,7 +37,17 @@ const getShopOrders = async (req, res) => {
         else return res.status(400).json({ success: false, message: "Invalid Kitchen" });
 
         const orders = await OrderModel.find({}).sort({ createdAt: -1 });
-        res.status(200).json({ success: true, orders });
+
+        // Fetch user details for each order to get the name
+        const ordersWithNames = await Promise.all(orders.map(async (order) => {
+            const user = await User.findOne({ email: order.user });
+            return {
+                ...order.toObject(),
+                userName: user ? user.name : "Unknown User"
+            };
+        }));
+
+        res.status(200).json({ success: true, orders: ordersWithNames });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error" });

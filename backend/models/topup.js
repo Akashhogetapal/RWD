@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
 
 const topupSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true
+    },
     userkey: {
-        type: String,   
+        type: String,
         required: true
     },
     amt: {
