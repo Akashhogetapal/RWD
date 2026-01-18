@@ -176,29 +176,29 @@ const rejecttop = async (req, res) => {
             message: "Server Error"
         });
     }
+}
 
-    const getTopupStats = async (req, res) => {
-        try {
-            const allHistory = await history.find({});
-            const total = allHistory.length;
-            const accepted = allHistory.filter(h => h.type === "accepted").length;
-            const rejected = allHistory.filter(h => h.type === "rejected").length;
+const getTopupStats = async (req, res) => {
+    try {
+        const allHistory = await history.find({});
+        const total = allHistory.length;
+        const accepted = allHistory.filter(h => h.type === "accepted").length;
+        const rejected = allHistory.filter(h => h.type === "rejected").length;
 
-            return res.status(200).json({
-                success: true,
-                stats: {
-                    total,
-                    accepted,
-                    rejected
-                }
-            });
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({
-                success: false,
-                message: "Server Error"
-            });
-        }
+        return res.status(200).json({
+            success: true,
+            stats: {
+                total,
+                accepted,
+                rejected
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
     }
 }
 
@@ -217,11 +217,11 @@ const getRecentTopupHistory = async (req, res) => {
         });
     }
 }
+
 module.exports = {
     createTopup,
     getTopups,
     accepttop,
-    rejecttop,
     rejecttop,
     getRecentTopupHistory,
     getTopupStats
