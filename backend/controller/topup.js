@@ -2,6 +2,7 @@ const Topup = require("../models/topup");
 const User = require("../models/user");
 const Wallet = require("../models/wallet");
 const history = require("../models/TopupHistory")
+const { sendTopupAcceptedEmail, sendTopupRejectedEmail } = require("../utils/mailer");
 const createTopup = async (req, res) => {
     const { key, amt, utr } = req.body;
 
@@ -33,9 +34,6 @@ const createTopup = async (req, res) => {
             amt,
             utr
         });
-
-        // Wallet update removed from here. Handled in accepttop.
-
         return res.status(201).json({
             success: true,
             message: "Topup successful"
@@ -109,17 +107,14 @@ const accepttop = async (req, res) => {
             userWallet.balance += Number(amt);
             await userWallet.save();
         }
-
-
-        // userWallet.balance += Number(amt); -> moved inside else block above
-        // await userWallet.save(); -> moved inside else block above
         await Topup.deleteOne({ utr });
-
-        // Fetch user again to ensure we have the name for history (or could use user from above if defined)
-        // Optimization: check if 'user' variable from earlier scope is available? No, it's inside if(userWallet) block. 
-        // Let's just fetch user name.
         const userDetails = await User.findOne({ key });
         const historyName = userDetails ? userDetails.name : "Unknown User";
+
+        if (userDetails) {
+            // Trigger Accepted Email
+            sendTopupAcceptedEmail(userDetails.email, userDetails.name, amt).catch(err => console.error("Email error:", err));
+        }
 
         await history.create({
             username: historyName,
@@ -170,6 +165,11 @@ const rejecttop = async (req, res) => {
 
         const userDetails = await User.findOne({ key });
         const historyName = userDetails ? userDetails.name : "Unknown User";
+
+        if (userDetails) {
+            // Trigger Rejected Email
+            sendTopupRejectedEmail(userDetails.email, userDetails.name, amount).catch(err => console.error("Email error:", err));
+        }
 
         await history.create({
             username: historyName,

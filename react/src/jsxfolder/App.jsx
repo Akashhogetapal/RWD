@@ -17,7 +17,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import ShopLogin from "./ShopLogin";
 import ShopDashboardd from "./Shopdashboardd";
 
-// ....... existing imports
 
 function App() {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -34,11 +33,11 @@ function App() {
         <Route path="/forget" element={<ForgetPassword />} />
         <Route path="/reset" element={<ResetPassword />} />
 
-        {/* Shopkeeper Routes */}
+        {}
         <Route path="/shop/login" element={<ShopLogin />} />
         <Route path="/shopdashboardd" element={<ShopDashboardd />} />
 
-        {/* Protected Routes */}
+        {}
         <Route path="/menu" element={
           <ProtectedRoute>
             <Menu onProfile={() => setProfileOpen(true)} />

@@ -11,7 +11,7 @@ function ForgetPassword() {
     const [email, setEmail] = useState("");
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
+    const [popup, setPopup] = useState(null); 
 
     const inputRef = useRef(null);
 

@@ -11,7 +11,7 @@ function ResetPassword() {
     const [showPass1, setShowPass1] = useState(false);
     const [showPass2, setShowPass2] = useState(false);
     const [email, setEmail] = useState("");
-    const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
+    const [popup, setPopup] = useState(null); 
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("resetEmail");

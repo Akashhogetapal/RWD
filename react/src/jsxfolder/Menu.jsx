@@ -1,7 +1,7 @@
 import "../css/menu.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import Profile from "./profile";
+
 import AuthPopup from "./AuthPopup";
 import { API_BASE_URL } from "../config";
 
@@ -106,7 +106,7 @@ function Menu({ onProfile }) {
                     itemprice: item.price,
                     itemsrc: item.imageUrl,
                     itemname: item.name,
-                    kitchen: item.kitchen || "Central Mess" // Use standardized kitchen field
+                    kitchen: item.kitchen || "Central Mess" 
                 })
             });
             const data = await res.json();

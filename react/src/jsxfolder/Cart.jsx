@@ -11,7 +11,7 @@ function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [pickupMins, setPickupMins] = useState(15);
-    const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
+    const [popup, setPopup] = useState(null); 
     const [userName, setUserName] = useState("");
 
     const [orderType, setOrderType] = useState("asap");

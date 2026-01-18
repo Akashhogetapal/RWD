@@ -6,6 +6,7 @@ const {
     OrderCafeDelight,
     OrderJuiceBar
 } = require("../models/orders/allOrders");
+const { sendOrderReadyEmail } = require("../utils/mailer");
 
 const shopLogin = async (req, res) => {
     const { email, password } = req.body;
@@ -64,7 +65,16 @@ const updateOrderStatus = async (req, res) => {
         if (!updated) updated = await OrderCafeDelight.findByIdAndUpdate(orderId, { status }, { new: true });
         if (!updated) updated = await OrderJuiceBar.findByIdAndUpdate(orderId, { status }, { new: true });
 
-        if (updated) res.status(200).json({ success: true, message: "Status updated" });
+        if (updated) {
+            if (status === "Ready") {
+                const user = await User.findOne({ email: updated.user });
+                if (user) {
+                    sendOrderReadyEmail(user.email, user.name, updated._id.toString(), updated.items)
+                        .catch(err => console.error("Email error:", err));
+                }
+            }
+            res.status(200).json({ success: true, message: "Status updated" });
+        }
         else res.status(404).json({ success: false, message: "Order not found" });
 
     } catch (error) {

@@ -1,8 +1,5 @@
 import "../css/canteen.css";
-// import { useState } from "react";
-// import Profile from "./profile";
 function Navbar({ onCartClick }) {
-  // const [open, setOpen] = useState(false);
   return (
      <>
     <div className="header">

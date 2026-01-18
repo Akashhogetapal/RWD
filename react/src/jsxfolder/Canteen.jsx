@@ -11,13 +11,11 @@ function Canteen() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
-  const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
+  const [popup, setPopup] = useState(null);
 
   const kitchenParam = searchParams.get("kitchen") || searchParams.get("name");
   const gmailParam = searchParams.get("gmail") || searchParams.get("user");
 
-  // Simplification: We migrated DB so kitchenParam matches kitchen field in DB directly.
-  // "Central Mess" -> kitchen: "Central Mess"
   const dbCategory = kitchenParam;
   const displayName = kitchenParam;
 
@@ -85,7 +83,7 @@ function Canteen() {
           itemprice: item.price,
           itemsrc: item.imageUrl,
           itemname: item.name,
-          kitchen: dbCategory // Pass correct kitchen name
+          kitchen: dbCategory 
         })
       });
 

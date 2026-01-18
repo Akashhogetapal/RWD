@@ -114,7 +114,7 @@ function Profile({ open, onClose }) {
               </div>
               <div
                 className="action-card"
-                onClick={() => handleNavigation("/contact")} // Assuming /contact exists, or use placeholder
+                onClick={() => handleNavigation("/contact")} 
                 style={{ cursor: "pointer" }}
               >
                 <div className="profile-action-icon">✉️</div>

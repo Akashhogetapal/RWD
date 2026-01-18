@@ -13,15 +13,19 @@ function ShopDashboardd() {
         revenue: 0
     });
 
-    const KITCHEN_NAME = "Snack Corner"; // Hardcoded for this dashboard instance based on context
+    const [kitchenName, setKitchenName] = useState(localStorage.getItem("kitchenName") || "Snack Corner");
+    const [shopUser, setShopUser] = useState(localStorage.getItem("shopUser") || "Shop Owner");
 
-    // ================= DATA FETCHING =================
+    useEffect(() => {
+        if (!localStorage.getItem("kitchenName")) {
+        }
+    }, []);
     const fetchOrders = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/auth/shop/orders`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ kitchenName: KITCHEN_NAME })
+                body: JSON.stringify({ kitchenName: kitchenName })
             });
             const data = await res.json();
             if (data.success) {
@@ -34,16 +38,8 @@ function ShopDashboardd() {
     };
 
     const calculateStats = (orderList) => {
-        // Today's stats (simplification: total of all fetched for now, or filter by date if needed)
-        // Let's assume 'Today' means all current active orders for simplicity first, 
-        // or we can filter by new Date() if createdAt is available.
-        // For now, let's just count totals as per the UI labels.
-
         const total = orderList.length;
         const prepareCount = orderList.filter(o => o.status === "Preparing").length;
-
-        // Calculate Revenue (only from Served or Accepted orders? Usually Served implies paid/completed)
-        // Let's sum up amount of 'Served' orders for revenue.
         const rev = orderList
             .filter(o => o.status === "Served")
             .reduce((acc, curr) => acc + (curr.totalAmount || 0), 0);
@@ -59,8 +55,6 @@ function ShopDashboardd() {
         fetchOrders();
     }, []);
 
-    // ================= DATA FILTERING =================
-    // Map Sidebar Tabs to Backend Statuses
     const getStatusFromTab = (tab) => {
         switch (tab) {
             case "Incoming": return "Pending";
@@ -75,7 +69,6 @@ function ShopDashboardd() {
 
     const filteredOrders = orders.filter(o => o.status === getStatusFromTab(activeTab));
 
-    // ================= ACTIONS =================
     const handleStatusUpdate = async (orderId, newStatus) => {
         try {
             const res = await fetch(`${API_BASE_URL}/auth/shop/update-status`, {
@@ -85,7 +78,6 @@ function ShopDashboardd() {
             });
             const data = await res.json();
             if (data.success) {
-                // Refresh data
                 fetchOrders();
             } else {
                 alert("Failed to update status");
@@ -95,7 +87,6 @@ function ShopDashboardd() {
         }
     };
 
-    // Helper to render action buttons based on current status
     const renderActionButtons = (order) => {
         const s = order.status;
         const id = order._id;
@@ -147,8 +138,8 @@ function ShopDashboardd() {
                     {/* logos removed as requested */}
 
                     <div className="paras">
-                        <p className="snack">Snack corner</p>
-                        <p className="shop"> shop owner</p>
+                        <p className="snack">{kitchenName}</p>
+                        <p className="shop">{shopUser}</p>
                     </div>
 
                     {/* profile icon removed as requested */}

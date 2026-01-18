@@ -6,9 +6,9 @@ async function sendOTPEmail(to, otp) {
     if (!apiKey) throw new Error("Missing BREVO_API_KEY");
 
     const payload = {
-        sender: { 
-            email: "aanush748@gmail.com",  
-            name: "BAKA TEAM" 
+        sender: {
+            email: "aanush748@gmail.com",
+            name: "BAKA TEAM"
         },
         to: [{ email: to }],
         subject: "Your OTP Code",
@@ -104,4 +104,143 @@ BAKA TEAM 😎
 }
 
 
-module.exports = {sendOTPEmail,welcome};
+async function sendTopupAcceptedEmail(to, name, amount) {
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) return;
+
+    const payload = {
+        sender: { email: "aanush748@gmail.com", name: "BAKA TEAM" },
+        to: [{ email: to }],
+        subject: "Top-up Accepted",
+        htmlContent: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+                <h2 style="color: #4CAF50;">Top-up Successful!</h2>
+                <p>Hi ${name},</p>
+                <p>Your wallet top-up of <strong>₹${amount}</strong> has been approved and added to your balance.</p>
+                <br/>
+                <p>Regards,<br/><b>BAKA TEAM</b></p>
+            </div>
+        `
+    };
+
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": apiKey },
+        body: JSON.stringify(payload)
+    });
+}
+
+async function sendTopupRejectedEmail(to, name, amount) {
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) return;
+
+    const payload = {
+        sender: { email: "aanush748@gmail.com", name: "BAKA TEAM" },
+        to: [{ email: to }],
+        subject: "Top-up Rejected",
+        htmlContent: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+                <h2 style="color: #F44336;">Top-up Rejected</h2>
+                <p>Hi ${name},</p>
+                <p>Your wallet top-up request of <strong>₹${amount}</strong> was rejected.</p>
+                <p>Please contact support if you think this is a mistake.</p>
+                <br/>
+                <p>Regards,<br/><b>BAKA TEAM</b></p>
+            </div>
+        `
+    };
+
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": apiKey },
+        body: JSON.stringify(payload)
+    });
+}
+
+async function sendOrderPlacedEmail(to, name, orderItems, totalAmount) {
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) return;
+
+    let itemsHtml = orderItems.map(item => `
+        <div style="display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;">
+            <img src="${item.itemsrc}" alt="${item.itemname}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover; margin-right: 15px;">
+            <div>
+                <p style="margin: 0; font-weight: bold;">${item.itemname}</p>
+                <p style="margin: 0; color: #555;">Qty: ${item.quantity} | ₹${item.itemprice}</p>
+            </div>
+        </div>
+    `).join('');
+
+    const payload = {
+        sender: { email: "aanush748@gmail.com", name: "BAKA TEAM" },
+        to: [{ email: to }],
+        subject: "Order Placed Successfully",
+        htmlContent: `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2 style="color: #FF7043;">Order Confirmed!</h2>
+                <p>Hi ${name},</p>
+                <p>Your order has been placed successfully. Please wait while its geting rready.</p>
+                <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                    ${itemsHtml}
+                </div>
+                <h3>Total Amount: ₹${totalAmount}</h3>
+                <br/>
+                <p>Regards,<br/><b>BAKA TEAM</b></p>
+            </div>
+        `
+    };
+
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": apiKey },
+        body: JSON.stringify(payload)
+    });
+}
+
+async function sendOrderReadyEmail(to, name, orderId, items) {
+    const apiKey = process.env.BREVO_API_KEY;
+    if (!apiKey) return;
+
+    let itemsHtml = items.map(item => `
+         <div style="display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0;">
+            <img src="${item.itemsrc}" alt="${item.itemname}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 15px;">
+            <div>
+                 <p style="margin: 0;">${item.quantity} x ${item.itemname}</p>
+            </div>
+        </div>
+    `).join('');
+
+    const payload = {
+        sender: { email: "aanush748@gmail.com", name: "BAKA TEAM" },
+        to: [{ email: to }],
+        subject: "Your Order is Ready!",
+        htmlContent: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+                <h2 style="color: #4CAF50;">Order Ready for Pickup!</h2>
+                <p>Hi ${name},</p>
+                <p>Your order <strong>#${orderId.slice(-6).toUpperCase()}</strong> is ready.</p>
+                <p>Please collect it from the counter.</p>
+                 <div style="text-align: left; background: #f9f9f9; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                    ${itemsHtml}
+                </div>
+                <br/>
+                <p>Regards,<br/><b>BAKA TEAM</b></p>
+            </div>
+        `
+    };
+
+    await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": apiKey },
+        body: JSON.stringify(payload)
+    });
+}
+
+module.exports = {
+    sendOTPEmail,
+    welcome,
+    sendTopupAcceptedEmail,
+    sendTopupRejectedEmail,
+    sendOrderPlacedEmail,
+    sendOrderReadyEmail
+};

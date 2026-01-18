@@ -1,6 +1,7 @@
 const Cart = require('../models/cart');
 const User = require('../models/user');
 const Order = require('../models/order');
+const { sendOrderPlacedEmail } = require("../utils/mailer");
 const add2cart = async (req, res) => {
     const { user, itemprice, itemsrc, itemname } = req.body;
 
@@ -128,7 +129,7 @@ const clearcart = async (req, res) => {
 
         const ordersByKitchen = {};
         items.forEach(item => {
-            const k = item.kitchen || "Central Mess"; 
+            const k = item.kitchen || "Central Mess";
             console.log(`Item: ${item.itemname}, Kitchen Field: ${item.kitchen}, Resolved Kitchen: ${k}`);
             if (!ordersByKitchen[k]) ordersByKitchen[k] = [];
             ordersByKitchen[k].push(item);
@@ -156,6 +157,12 @@ const clearcart = async (req, res) => {
                 await OrderCentralMess.create(orderData);
             }
         }
+        // Fetch user name and send email
+        const userDetails = await User.findOne({ email: user });
+        if (userDetails) {
+            sendOrderPlacedEmail(user, userDetails.name, items, totalAmount).catch(err => console.error("Email error:", err));
+        }
+
         return res.status(200).json({
             success: true,
             message: "Order Placed"
