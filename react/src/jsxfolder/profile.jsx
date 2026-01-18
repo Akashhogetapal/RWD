@@ -42,8 +42,7 @@ function Profile({ open, onClose }) {
       return () => clearTimeout(timer);
     }
   }, [open]);
-
-  // Close modal on any scroll or swipe
+ 
   useEffect(() => {
     if (!open) return;
 

@@ -37,7 +37,7 @@ function App() {
 
         {/* Shopkeeper Routes */}
         <Route path="/shop/login" element={<ShopLogin />} />
-        <Route path="/shop/dashboard" element={<ShopDashboard />} />
+        <Route path="/shopdashboardd" element={<ShopDashboardd />} />
 
         {/* Protected Routes */}
         <Route path="/menu" element={
@@ -73,11 +73,6 @@ function App() {
         <Route path="/admin" element={
           <ProtectedRoute>
             <Admin />
-          </ProtectedRoute>
-        } />
-        <Route path="/shopdashboardd" element={
-          <ProtectedRoute>
-            <ShopDashboardd />
           </ProtectedRoute>
         } />
       </Routes>

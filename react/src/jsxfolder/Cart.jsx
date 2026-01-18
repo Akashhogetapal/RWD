@@ -12,6 +12,7 @@ function Cart() {
     const [loading, setLoading] = useState(true);
     const [pickupMins, setPickupMins] = useState(15);
     const [popup, setPopup] = useState(null); // { title, message, icon, btnText, onConfirm }
+    const [userName, setUserName] = useState("");
 
     const [orderType, setOrderType] = useState("asap");
     const [scheduleDate, setScheduleDate] = useState("");
@@ -40,7 +41,16 @@ function Cart() {
             return;
         }
         fetchCart();
-    }, [userEmail, navigate]);
+
+        if (userKey) {
+            fetch(`${API_BASE_URL}/auth/profile?key=${userKey}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.body) setUserName(data.body.name);
+                })
+                .catch(err => console.error("Failed to fetch profile:", err));
+        }
+    }, [userEmail, navigate, userKey]);
 
 
     const fetchCart = async () => {
@@ -160,6 +170,8 @@ function Cart() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     user: userEmail,
+                    userKey: userKey,
+                    username: userName,
                     items: cartItems,
                     totalItems: totalItemsCount,
                     totalAmount: grandTotal,

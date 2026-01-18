@@ -11,8 +11,6 @@ function Topup() {
   const [amount, setAmount] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
   const [popup, setPopup] = useState(null);
-
-  // ================= FETCH BALANCE =================
   const fetchBalance = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/auth/getwallet`, {
@@ -33,8 +31,6 @@ function Topup() {
       console.error(err);
     }
   };
-
-  // 🔥 CALL ON PAGE LOAD
   useEffect(() => {
     fetchBalance();
   }, []);
@@ -42,8 +38,6 @@ function Topup() {
   const quickAdd = (value) => {
     setAmount(value);
   };
-
-  // ================= SUBMIT TOPUP =================
   const handlePay = () => {
     if (amount <= 0) {
       setPopup({
