@@ -7,13 +7,18 @@
   font-family: 'Poppins', sans-serif;
 }
 
-body {
-  background: #FFF8F0; 
-  min-height: 100vh;
+.forget-password-page {
+  background: #FFF8F0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: auto; 
+  overflow-y: auto;
+  z-index: 1000;
 }
 
 
@@ -25,8 +30,8 @@ body {
   border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
   position: relative;
-  
-  height: auto; 
+
+  height: auto;
   display: flex;
   flex-direction: column;
 }
@@ -42,7 +47,10 @@ body {
   text-decoration: none;
   transition: color 0.2s;
 }
-.back-link:hover { color: #333; }
+
+.back-link:hover {
+  color: #333;
+}
 
 h1 {
   font-size: 28px;
@@ -64,7 +72,7 @@ h1 {
 .input-group {
   width: 100%;
   margin-bottom: 15px;
-  text-align: left; 
+  text-align: left;
 }
 
 .input-label {
@@ -114,6 +122,7 @@ input[type="text"]:focus {
   margin-top: 15px;
   transition: all 0.2s;
 }
+
 .btn-get-otp:hover {
   background: #FFF5EB;
 }
@@ -132,6 +141,7 @@ input[type="text"]:focus {
   margin-top: 25px;
   transition: transform 0.2s;
 }
+
 .btn-verify:hover {
   transform: translateY(-2px);
 }
@@ -139,21 +149,21 @@ input[type="text"]:focus {
 
 .otp-section {
   display: block;
-  
+
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  
+
   transition: max-height 0.6s ease-in-out, opacity 0.4s ease-in-out, margin-top 0.4s ease;
   margin-top: 0;
 }
 
 .otp-section.visible {
-  
-  max-height: 600px; 
+
+  max-height: 600px;
   opacity: 1;
   margin-top: 30px;
-  overflow: visible; 
+  overflow: visible;
 }
 
 
@@ -167,14 +177,22 @@ input[type="text"]:focus {
   letter-spacing: 1.5px;
   margin-bottom: 20px;
 }
-.divider::before, .divider::after {
+
+.divider::before,
+.divider::after {
   content: "";
   flex: 1;
   height: 1px;
   background: #EEE;
 }
-.divider::before { margin-right: 15px; }
-.divider::after { margin-left: 15px; }
+
+.divider::before {
+  margin-right: 15px;
+}
+
+.divider::after {
+  margin-left: 15px;
+}
 
 
 .otp-container {
@@ -202,10 +220,21 @@ input[type="text"]:focus {
 
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
 }
+
 .error {
   animation: shake 0.3s ease-in-out;
   border-color: #FF5252 !important;
@@ -218,7 +247,18 @@ input[type="text"]:focus {
     margin: 20px;
     border-radius: 20px;
   }
-  h1 { font-size: 24px; }
-  .desc-text { font-size: 14px; margin-bottom: 25px; }
-  .otp-box { height: 50px; font-size: 20px; }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .desc-text {
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+
+  .otp-box {
+    height: 50px;
+    font-size: 20px;
+  }
 }

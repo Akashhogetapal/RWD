@@ -11,7 +11,7 @@ function ForgetPassword() {
     const [email, setEmail] = useState("");
     const [otpSent, setOtpSent] = useState(false);
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-    const [popup, setPopup] = useState(null); 
+    const [popup, setPopup] = useState(null);
 
     const inputRef = useRef(null);
 
@@ -111,77 +111,79 @@ function ForgetPassword() {
     };
 
     return (
-        <div className="card">
+        <div className="forget-password-page">
+            <div className="card">
 
-            { }
-            <div onClick={() => navigate("/login")} className="back-link">
-                ← Back to Login
-            </div>
-
-            <h1>Forgot Password</h1>
-            <p className="desc-text">
-                Enter your registered email or phone number to receive a verification code.
-            </p>
-
-            { }
-            <div className="input-group">
-                <label className="input-label">Email Address or Phone Number</label>
-                <input
-                    type="text"
-                    ref={inputRef}
-                    className={otpSent ? "input-success" : ""}
-                    placeholder="Enter email or phone number"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={otpSent}
-                />
-
-                <button className="btn-get-otp" onClick={handleSendOTP}>
-                    {otpSent ? "Resend OTP" : "Get OTP"}
-                </button>
-            </div>
-
-            { }
-            <div className={`otp-section ${otpSent ? "visible" : ""}`}>
-
-                <div className="divider">VERIFY</div>
-
-                <div className="input-group">
-                    <label className="input-label">Enter the 6-Digit Verification Code</label>
-                    <div className="otp-container">
-                        {otp.map((digit, index) => (
-                            <input
-                                key={index}
-                                id={`otp-${index}`}
-                                type="text"
-                                className="otp-box"
-                                maxLength={1}
-                                value={digit}
-                                onChange={(e) => handleOtpChange(index, e.target.value)}
-                                onKeyDown={(e) => handleKeyDown(index, e)}
-                            />
-                        ))}
-                    </div>
+                { }
+                <div onClick={() => navigate("/login")} className="back-link">
+                    ← Back to Login
                 </div>
 
-                <button className="btn-verify" onClick={handleVerifyOTP}>
-                    Verify & Proceed
-                </button>
-            </div>
+                <h1>Forgot Password</h1>
+                <p className="desc-text">
+                    Enter your registered email or phone number to receive a verification code.
+                </p>
 
-            {/* Popup */}
-            {popup && (
-                <AuthPopup
-                    title={popup.title}
-                    message={popup.message}
-                    icon={popup.icon}
-                    btnText={popup.btnText || "OK"}
-                    onConfirm={() => {
-                        if (popup.onConfirm) popup.onConfirm();
-                        setPopup(null);
-                    }}
-                />
-            )}
+                { }
+                <div className="input-group">
+                    <label className="input-label">Email Address or Phone Number</label>
+                    <input
+                        type="text"
+                        ref={inputRef}
+                        className={otpSent ? "input-success" : ""}
+                        placeholder="Enter email or phone number"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={otpSent}
+                    />
+
+                    <button className="btn-get-otp" onClick={handleSendOTP}>
+                        {otpSent ? "Resend OTP" : "Get OTP"}
+                    </button>
+                </div>
+
+                { }
+                <div className={`otp-section ${otpSent ? "visible" : ""}`}>
+
+                    <div className="divider">VERIFY</div>
+
+                    <div className="input-group">
+                        <label className="input-label">Enter the 6-Digit Verification Code</label>
+                        <div className="otp-container">
+                            {otp.map((digit, index) => (
+                                <input
+                                    key={index}
+                                    id={`otp-${index}`}
+                                    type="text"
+                                    className="otp-box"
+                                    maxLength={1}
+                                    value={digit}
+                                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                                    onKeyDown={(e) => handleKeyDown(index, e)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <button className="btn-verify" onClick={handleVerifyOTP}>
+                        Verify & Proceed
+                    </button>
+                </div>
+
+                {/* Popup */}
+                {popup && (
+                    <AuthPopup
+                        title={popup.title}
+                        message={popup.message}
+                        icon={popup.icon}
+                        btnText={popup.btnText || "OK"}
+                        onConfirm={() => {
+                            if (popup.onConfirm) popup.onConfirm();
+                            setPopup(null);
+                        }}
+                    />
+                )}
+            </div>
         </div>
     );
 }
