@@ -65,7 +65,7 @@
 }
 
 .profile-popup-card h2 {
-  font-size: 37px;
+  font-size: 24px;
   font-weight: bolder;
   color: #FFF6E8;
 }
@@ -151,7 +151,6 @@
   margin-bottom: 6px;
   border-radius: 53px;
   height: 70px;
-
 }
 
 .profile-info {
@@ -163,7 +162,7 @@
   color: #FF7043;
   margin-top: 10px;
   border: 1.6px solid #FF7043;
-  font-size: 23px;
+  font-size: 16px;
 }
 
 .logout-btn {
