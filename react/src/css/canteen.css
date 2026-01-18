@@ -267,7 +267,7 @@ html {
 }
 
 
-.canteen-card .image::before {
+/* .canteen-card .image::before {
     content: "●";
     color: #22C55E;
     background: white;
@@ -283,7 +283,7 @@ html {
     justify-content: center;
     font-size: 10px;
     z-index: 5;
-}
+} */
 
 .canteen-card .card-body {
     padding: 25px;
