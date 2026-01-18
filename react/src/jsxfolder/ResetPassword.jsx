@@ -11,7 +11,7 @@ function ResetPassword() {
     const [showPass1, setShowPass1] = useState(false);
     const [showPass2, setShowPass2] = useState(false);
     const [email, setEmail] = useState("");
-    const [popup, setPopup] = useState(null); 
+    const [popup, setPopup] = useState(null);
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("resetEmail");
@@ -77,61 +77,63 @@ function ResetPassword() {
     };
 
     return (
-        <div className="card">
-            <h1>Reset Password</h1>
-            <p className="subtitle">
-                Your identity has been verified. Create a new password to secure your account.
-            </p>
+        <div className="reset-password-page">
+            <div className="card">
+                <h1>Reset Password</h1>
+                <p className="subtitle">
+                    Your identity has been verified. Create a new password to secure your account.
+                </p>
 
-            <div className="form-group">
-                <label htmlFor="pass1">New Password</label>
-                <div className="input-wrapper">
-                    <input
-                        id="pass1"
-                        type={showPass1 ? "text" : "password"}
-                        placeholder="Enter new password"
-                        value={pass1}
-                        onChange={(e) => setPass1(e.target.value)}
-                    />
-                    <span className="eye-icon" onClick={() => setShowPass1(!showPass1)}>
-                        {showPass1 ? "🙈" : "👁️"}
-                    </span>
+                <div className="form-group">
+                    <label htmlFor="pass1">New Password</label>
+                    <div className="input-wrapper">
+                        <input
+                            id="pass1"
+                            type={showPass1 ? "text" : "password"}
+                            placeholder="Enter new password"
+                            value={pass1}
+                            onChange={(e) => setPass1(e.target.value)}
+                        />
+                        <span className="eye-icon" onClick={() => setShowPass1(!showPass1)}>
+                            {showPass1 ? "🙈" : "👁️"}
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            <div className="form-group">
-                <label htmlFor="pass2">Confirm Password</label>
-                <div className="input-wrapper">
-                    <input
-                        id="pass2"
-                        type={showPass2 ? "text" : "password"}
-                        placeholder="Re-enter new password"
-                        value={pass2}
-                        onChange={(e) => setPass2(e.target.value)}
-                    />
-                    <span className="eye-icon" onClick={() => setShowPass2(!showPass2)}>
-                        {showPass2 ? "🙈" : "👁️"}
-                    </span>
+                <div className="form-group">
+                    <label htmlFor="pass2">Confirm Password</label>
+                    <div className="input-wrapper">
+                        <input
+                            id="pass2"
+                            type={showPass2 ? "text" : "password"}
+                            placeholder="Re-enter new password"
+                            value={pass2}
+                            onChange={(e) => setPass2(e.target.value)}
+                        />
+                        <span className="eye-icon" onClick={() => setShowPass2(!showPass2)}>
+                            {showPass2 ? "🙈" : "👁️"}
+                        </span>
+                    </div>
                 </div>
+
+                <button className="btn-save" onClick={handleReset}>
+                    Save New Password
+                </button>
+
+                {/* Popup */}
+                {popup && (
+                    <AuthPopup
+                        title={popup.title}
+                        message={popup.message}
+                        icon={popup.icon}
+                        btnText={popup.btnText || "OK"}
+                        onConfirm={() => {
+                            if (popup.onConfirm) popup.onConfirm();
+                            setPopup(null);
+                        }}
+                    />
+                )}
             </div>
-
-            <button className="btn-save" onClick={handleReset}>
-                Save New Password
-            </button>
-
-            {/* Popup */}
-            {popup && (
-                <AuthPopup
-                    title={popup.title}
-                    message={popup.message}
-                    icon={popup.icon}
-                    btnText={popup.btnText || "OK"}
-                    onConfirm={() => {
-                        if (popup.onConfirm) popup.onConfirm();
-                        setPopup(null);
-                    }}
-                />
-            )}
         </div>
     );
 }
